@@ -1,0 +1,13 @@
+#pragma once
+
+#define THROTTLE_FACTOR 0.9
+#define FORWARD_BACWARD 5
+#define LEFT_RIGHT 6
+#define THROTTLE_PIN 7
+#define STEERING_PIN 8
+#define STEERING_MULT 10
+#define XL_RADIUS 0.02857
+#define RIGHT_MOTOR_PIN 10
+#define LEFT_MOTOR_PIN 11
+#define THROTTLE_CUTOFF 10
+#define LED_PIN 12
