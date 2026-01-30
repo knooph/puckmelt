@@ -1,10 +1,6 @@
+#include "network_id.h" //import the wifi credentials
 #include <WiFi.h> //Library for utilizie the wifi capabilities of the microcontroller
 #include <ArduinoOTA.h> //Library for doing Over The Air stuff
-
-
-//WiFi credentials
-const char* hotspot_name = "Puckmelt_OTA"; //the SSID (Service Set Identifier) is the name of the WiFi network you want to connect to.
-const char* password = "placeholder";
 
 void setup() {
   
