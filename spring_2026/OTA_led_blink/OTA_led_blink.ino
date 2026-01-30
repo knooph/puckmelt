@@ -4,7 +4,7 @@
 
 void setup() {
   
-  WiFi.begin(hotspot_name,password); //connects to the hotspot
+  WiFi.begin(WiFi_SSID,WiFi_PASSWORD); //connects to the hotspot
   while (WiFi.status() != WL_CONNECTED) { //wait until connected to hotspot
     delay(500);
   }
