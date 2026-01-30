@@ -4,7 +4,7 @@
 
 //WiFi credentials
 const char* hotspot_name = "Puckmelt_OTA"; //the SSID (Service Set Identifier) is the name of the WiFi network you want to connect to.
-const char* password = "5hit4boutD1ck";
+const char* password = "placeholder";
 
 void setup() {
   
