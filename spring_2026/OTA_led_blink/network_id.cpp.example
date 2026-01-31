@@ -1,0 +1,4 @@
+#include "network_id.h"
+
+const char* WiFi_SSID = "your hotspot name here";
+const char* WiFi_PASSWORD = "your password name here";
