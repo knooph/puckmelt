@@ -44,9 +44,9 @@ void loop() {
 }
 
 void blink(uint8_t time,uint8_t r,uint8_t g,uint8_t b) {
-  rgbLedWrite(RGB_BUILTIN, r, g, b);
+  rgbLedWrite(PIN_RGB_LED, r, g, b);
   delay(time);
-  rgbLedWrite(RGB_BUILTIN, 0,0,0);
+  rgbLedWrite(PIN_RGB_LED, 0,0,0);
 }
 
 /*

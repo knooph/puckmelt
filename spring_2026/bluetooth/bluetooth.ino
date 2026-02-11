@@ -12,4 +12,9 @@ void setup() {
 
 void loop() {
   OTA_handle();
+
+  rgbLedWrite(PIN_RGB_LED, 100, 100, 100);
+  delay(1000);
+  rgbLedWrite(PIN_RGB_LED, 0, 0, 0);
+  bt.printScan(bt.scanFor(5));
 }
