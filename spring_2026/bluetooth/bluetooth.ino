@@ -7,14 +7,16 @@ void setup() {
   Serial.begin(115200);
   pinMode(PIN_RGB_LED, OUTPUT);
   OTA_init();
-  bt.printScan(bt.scanFor(5));
+  
+  bt.scanForPrint(5);
+  
 }
 
 void loop() {
   OTA_handle();
 
-  rgbLedWrite(PIN_RGB_LED, 100, 100, 100);
-  delay(1000);
+  rgbLedWrite(PIN_RGB_LED, 10, 10, 50);
+  bt.scanForPrint(5);
   rgbLedWrite(PIN_RGB_LED, 0, 0, 0);
-  bt.printScan(bt.scanFor(5));
+  delay(1000);
 }

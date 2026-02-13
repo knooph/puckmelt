@@ -5,11 +5,12 @@
 class bluetooth {
   public:
     bluetooth();
-    NimBLEScanResults scanFor(int seconds);
-    void printScan(NimBLEScanResults results);
+    void scanFor(int seconds);
+    void scanForPrint(int seconds);
 
   private:
     NimBLEScan* scanner;
+    NimBLEScanResults last_scan;
 };
 
 

@@ -8,5 +8,5 @@ void setup() {
 
 void loop() {
   OTA_handle();
-
+  OTA_handle();
 }
