@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include "NimBLEDevice.h"
 
-
 class bluetooth {
   public:
     bluetooth();
@@ -12,5 +11,3 @@ class bluetooth {
     NimBLEScan* scanner;
     NimBLEScanResults last_scan;
 };
-
-

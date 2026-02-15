@@ -1,6 +1,6 @@
-#include "OTA_Module.h"
+#include "OTA.h"
 
-
+//Connects to hotspot using credentials in network.cpp
 void OTA_init() {
   Serial.println("Connecting...");
   WiFi.mode(WIFI_STA);

@@ -1,14 +1,16 @@
 #include "OTA.h"
+#include "Bluetooth_Module.h"
+
+bluetooth bt;
 
 void setup() {
   Serial.begin(115200);
-  //Serial.println("Check A");
+  Serial.println("\n\n\n\n\n\n\n\n\n\n");
   pinMode(PIN_RGB_LED, OUTPUT);
-  //Serial.println("Check B");
   OTA_init();
-  //Serial.println("Check C");
 }
 
 void loop() {
   OTA_handle();
+  Serial.println("Working!");
 }

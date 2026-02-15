@@ -1,8 +1,6 @@
 #include "OTA.h"
 #include <DShotRMT.h>
 
-
-
 // Supported: DSHOT150, DSHOT300, DSHOT600, (DSHOT1200)
 static constexpr dshot_mode_t DSHOT_MODE = DSHOT300;
 
