@@ -7,7 +7,7 @@ motor to test should be plugged into GPIO Pin 4
 
 
 //DShotRMT(gpio_num_t gpio, dshot_mode_t mode = DSHOT300, bool is_bidirectional = false, uint16_t magnet_count = DEFAULT_MOTOR_MAGNET_COUNT);
-DShotRMT motor0 = DShotRMT(GPIO_NUM_4,DSHOT600,false,14);
+DShotRMT motor0 = DShotRMT(GPIO_NUM_4,DSHOT600,true,14);
 dshot_result_t status;
 bool testActive = false;
 unsigned long timeout = 0;
