@@ -7,7 +7,7 @@ motor to test should be plugged into GPIO Pin 4
 
 
 //DShotRMT(gpio_num_t gpio, dshot_mode_t mode = DSHOT300, bool is_bidirectional = false, uint16_t magnet_count = DEFAULT_MOTOR_MAGNET_COUNT);
-DShotRMT motor0 = DShotRMT(4,DSHOT1200,true,14);
+DShotRMT motor0 = DShotRMT(GPIO_NUM_4,DSHOT600,false,14);
 dshot_result_t status;
 bool testActive = false;
 unsigned long timeout = 0;
@@ -50,8 +50,9 @@ void Serial_handle() {
     delay(100);
     Serial.begin();
     return;
-  }
-  if ( cleanInput(input1) && cleanInput(input2) ){ //Check if input is formatted correctly
+  } else if (input1 == "get" || input2 == "get") {
+    motor_status( motor0.getTelemetry(), "Retrieve Telemetry");
+  } else if ( cleanInput(input1) && cleanInput(input2) ){ //Check if input is formatted correctly
     throttle = input1.toFloat();
     time = abs(input2.toInt());
 
