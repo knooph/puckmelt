@@ -1,8 +1,11 @@
 #include "Bluetooth_Module.h"
 
 bluetooth::bluetooth() {
+  Serial.print("Check A");
   NimBLEDevice::init("");
+  Serial.print("Check B");
   scanner = NimBLEDevice::getScan();
+  Serial.print("Check C");
 }
 
 void bluetooth::scanFor(int seconds) {

@@ -4,7 +4,9 @@
 bluetooth bt;
 
 void setup() {
+  delay(1000);
   Serial.begin(115200);
+  //bluetooth bt;
   Serial.println("\n\n\n\n\n\n\n\n\n\n");
   pinMode(PIN_RGB_LED, OUTPUT);
   OTA_init();
