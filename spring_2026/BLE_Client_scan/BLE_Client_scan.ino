@@ -7,10 +7,26 @@ BLEScanResults* results = nullptr;
 
 class btCallback : public BLEAdvertisedDeviceCallbacks {
   void onResult(BLEAdvertisedDevice advertisedDevice) {
-    String name = (advertisedDevice.haveName()) ? advertisedDevice.getName() : "UNKNOWN" ;
-    String manf = (advertisedDevice.haveManufacturerData()) ? advertisedDevice.getManufacturerData() : "GENERIC";
-    String serv = (advertisedDevice.haveServiceData()) ? advertisedDevice.getServiceData() : "UNKNOWN CAPABILITIES";
+    String addr = advertisedDevice.getAddress().toString();
+    String name = (advertisedDevice.haveName()) ? advertisedDevice.getName() : "UNKNOWN";
+    String manf = (advertisedDevice.haveManufacturerData()) ? advertisedDevice.getManufacturerData() : "UNKNOWN";
+    String rssi = (advertisedDevice.haveRSSI()) ? String(advertisedDevice.getRSSI()) : "UNKNOWN" ;
+    int srv_ct = advertisedDevice.getServiceUUIDCount();
+    Serial.printf("BLE DEVICE FOUND\n\tNAME: %s\n\tADDRESS: %s\n\tMANUFACT. DATA: %s\n\tRSSI: %s\n\tSERVICES OFFERED: %d\n",name,addr,manf,rssi,srv_ct);
+    if (srv_ct > 0) {
+      Serial.print("\t\t");
+      for (int i = 0; i < srv_ct; i++) {
+        Serial.print(advertisedDevice.getServiceUUID(i).toString());
+        Serial.print((i == srv_ct-1) ? "\n" : "\n\t\t");
+      }
+    }
+
   }
+};
+
+class btCnnctCallback : public BLEClientCallbacks {
+  void onConnect(BLEClient *pClient) { }
+  void onDisconnect(BLEClient *pClient) { }
 };
 
 void setup() {
@@ -30,24 +46,18 @@ void setup() {
   pBLEScan->setInterval(1500);
   pBLEScan->setWindow(1000);
   pBLEScan->setActiveScan(true);
+  pBLEScan->setAdvertisedDeviceCallbacks(new btCallback);
+  Serial.println("\nScan Results:");
   pBLEScan->start(5, false);                                                //Start scanning
 }
 
 void loop() {
   OTA_handle();
+
   if (!BLEDevice::getScan()->isScanning()) {
-    results->dump();
-    results = BLEDevice::getScan()->getResults();
     Serial.println("\nScan Results:");
-    for (int i = 0; i < results->getCount(); i++) {
-      Serial.print("\t");
-      Serial.print(i+1);
-      Serial.print(": ");
-      Serial.print(results->getDevice(i).getName());
-      Serial.print(" @ ");
-      Serial.println(results->getDevice(i).getAddress().toString());
-    }
     BLEDevice::getScan()->start(5, false);    //actually do the scan
     delay(5000);
   }
+
 }

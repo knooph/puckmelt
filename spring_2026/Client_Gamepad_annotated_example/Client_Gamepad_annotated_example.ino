@@ -232,18 +232,22 @@ void setup() {
 BLEScanResults* results = nullptr;
 
 void loop() {
-  if (!BLEDevice::getScan()->isScanning()) {
-    results = BLEDevice::getScan()->getResults();
-    Serial.println("Scan Results:");
-    for (int i = 0; i < results->getCount(); i++) {
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.print(results->getDevice(i).getName());
-      Serial.print(" @ ");
-      Serial.println(results->getDevice(i).getAddress().toString());
+  // Connect to gamepad if found
+  if (doConnect == true) {
+    if (connectToServer()) {
+      Serial.println("\n*** Ready to receive gamepad input ***\n");
+    } else {
+      Serial.println("Failed to connect to gamepad");
     }
-  } else {
-    BLEDevice::getScan()->start(5, false);    //actually do the scan
-    delay(5500);
+    doConnect = false;
   }
+
+  // Restart scanning if disconnected
+  if (!connected && doScan) {
+    Serial.println("\nScanning for gamepads...");
+    BLEDevice::getScan()->start(5, false);
+    delay(1000);
+  }
+
+  delay(100);
 }
