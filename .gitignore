@@ -1,6 +1,6 @@
 **/network_id.cpp
 DShot_documentation/**
 BLE_documentation/**
-/.pio/**
-/.vscode/**
+/.pio
+/.vscode
 **/platformio.ini
