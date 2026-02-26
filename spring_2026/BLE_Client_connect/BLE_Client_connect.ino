@@ -9,22 +9,27 @@ BLEScanResults results;
 int glbl_indx = 0;
 bool busy = false;
 char input[4]; //3 char + null terminator
+String output_buffer = "";
 
 class btCallback : public BLEAdvertisedDeviceCallbacks {
   public:
   void onResult(BLEAdvertisedDevice advertisedDevice) {
     String addr = advertisedDevice.getAddress().toString().c_str();
-    String name = (advertisedDevice.haveName()) ? advertisedDevice.getName().c_str(): "UNKNOWN";
-    String manf = (advertisedDevice.haveManufacturerData()) ? advertisedDevice.getManufacturerData().c_str() : "UNKNOWN";
-    String rssi = (advertisedDevice.haveRSSI()) ? String(advertisedDevice.getRSSI()) : "UNKNOWN" ;
+    String name = (advertisedDevice.haveName()) ? advertisedDevice.getName().c_str(): "";
+    String manf = (advertisedDevice.haveManufacturerData()) ? advertisedDevice.getManufacturerData().c_str() : "";
+    String rssi = (advertisedDevice.haveRSSI()) ? String(advertisedDevice.getRSSI()) : " " ;
     int srv_ct = advertisedDevice.getServiceUUIDCount();
     glbl_indx++;
-    Serial.printf("%d) \tNAME: %s\n\tADDRESS: %s\n\tMANUFACT. DATA: %s\n\tRSSI: %s\n\tSERVICES OFFERED: %d\n",glbl_indx,name,addr,manf,rssi,srv_ct);
+    output_buffer += String(glbl_indx) + ") | NAME: " + name + " | NANUF.: " + manf + " | SERVICES OFFERED: " + String(srv_ct) + "\n";
+    // Serial.printf("%d) \tNAME: %s\n\tADDRESS: %s\n\tMANUFACT. DATA: %s\n\tRSSI: %s\n\tSERVICES OFFERED: %d\n",glbl_indx,name,addr,manf,rssi,srv_ct);
     if (srv_ct > 0) {
-      Serial.print("\t\t");
+      output_buffer += "\t";
+      // Serial.print("\t\t");
       for (int i = 0; i < srv_ct; i++) {
-        Serial.print(advertisedDevice.getServiceUUID(i).toString().c_str());
-        Serial.print((i == srv_ct-1) ? "\n" : "\n\t\t");
+        output_buffer += advertisedDevice.getServiceUUID(i).toString().c_str();
+        // Serial.print(advertisedDevice.getServiceUUID(i).toString().c_str());
+        output_buffer += (i == srv_ct-1) ? "\n" : "\n\t";
+        // Serial.print((i == srv_ct-1) ? "\n" : "\n\t\t");
       }
     }
 
@@ -33,7 +38,9 @@ class btCallback : public BLEAdvertisedDeviceCallbacks {
   static void scanCallback(BLEScanResults results) {
     busy = false;
     glbl_indx = 0;
+    Serial.print(output_buffer);
     Serial.println("Scan Complete");
+    output_buffer = "";
   }
 
 };
@@ -44,6 +51,7 @@ class btCnnctCallback : public BLEClientCallbacks {
     Serial.printf("Connected!");
   }
   void onDisconnect(BLEClient *pClient) {
+    busy = false;
     Serial.printf("Disconnected!");
   }
 };
@@ -105,7 +113,7 @@ void handleInput(String text) {
     int bytesRead = Serial.readBytes(input, 3);
     input[bytesRead] = '\0';
     Serial.println(input);
-    connectTo( String(input).toInt() );
+    connectTo( (uint32_t)(String(input).toInt() - 1));
   } else if (text == "dnx") {
     int bytesRead = Serial.readBytes(input, 3);
     input[bytesRead] = '\0';
@@ -113,10 +121,11 @@ void handleInput(String text) {
   }
 }
 
-void connectTo(uint8_t deviceIndex) {
+void connectTo(uint32_t deviceIndex) {
   BLEClient* newClient = BLEDevice::createClient();
   newClient->setClientCallbacks(new btCnnctCallback);
   results = BLEDevice::getScan()->getResults();
+  BLEAdvertisedDevice target = results.getDevice(deviceIndex);
   busy = true;
-  newClient->connect(&results.getDevice(deviceIndex - 1));
+  newClient->connect(&target);
 }
