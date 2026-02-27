@@ -7,8 +7,14 @@ void OTA_init() {
 
   WiFi.begin(WiFi_SSID,WiFi_PASSWORD);
 
-  while(WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.println("Connection failed! Rebooting...");
+  int attempt = 0;
+  while(WiFi.waitForConnectResult() != WL_CONNECTED && attempt < 10) {
+    Serial.println("Connection failed! Retrying...");
+    delay(1000);
+  }
+
+  if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+    Serial.println("Too many retries. Rebooting... (Expect core dump)");
     ESP.restart();
   }
 
