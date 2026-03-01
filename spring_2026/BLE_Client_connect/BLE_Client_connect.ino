@@ -13,53 +13,68 @@ void setup() {
   Serial.setTimeout(30000);
   OTA_init();
   bt = new bluetooth();
+  bt->scan(5);
+
+  delay(6000);
+
+  for(int i = 0; i < bt->results->getCount(); i++) {
+    Serial.print(i);
+    Serial.print(") ");
+    Serial.println(bt->results->getDevice(i).toString().c_str());
+  }
 }
 
 void loop() {
   OTA_handle();
-  handle_Serial();
 }
 
+/*
 void handle_Serial() {
-  if (Serial.available() > 0 && !holdSerial) { //Generic Serial input
-    char c = Serial.read();
-    input_buffer += c;
-    Serial.print(c);
-    if (c == '\n') {
-      Serial.println("cmd detected");
-      input_buffer.pop_back();
-      Serial.println(input_buffer.c_str());
-      cmd_Serial(input_buffer);
-      input_buffer = "";
-    } else if (c == '\b') {
-      input_buffer.pop_back();
-      Serial.print(" ");
-      input_buffer.pop_back();
+  if (Serial.available() > 0 && !holdSerial) {
+    
+
+    char c = Serial.read(); //read input
+
+    if ((c == '\b' || c == 127) && !input_buffer.empty()) { //if incoming char is a backspace/delete
+      input_buffer.pop_back(); //delete the last char in buffer
+      Serial.print("\b \b"); //move back, print space, move back
+
+    } else if (c == '\n') { //if incoming char is a newline
+      Serial.print('\n');
+      cmd_Serial(input_buffer); //execute command
+      input_buffer = ""; //clear buffer
+    } else if (isAscii(c)) {
+      input_buffer += c;
+      Serial.print(c);
     }
-  } else if (holdSerial && Serial.peek() == 1 && !bt->isScanning) { //Hold serial while scanning
+
+
+  } else if (holdSerial && !bt->isScanning) {
+    
+
       for (int i = 0; i < bt->results->getCount(); i++) {
         Serial.print(i);
         Serial.print(") ");
-        Serial.print(bt->results->getDevice(i).toString().c_str());
+        Serial.println(bt->results->getDevice(i).toString().c_str());
+      }
       Serial.flush();
       holdSerial = false;
-    }
+
+  } else if (holdSerial && bt->isScanning && (micros() % 1000000 == 0)) {
+    Serial.println("Scanning...");
   }
 }
 
 void cmd_Serial(std::string cmd) {
-  // Serial.println(cmd.substr(0,5).c_str());
-  // Serial.println(cmd.substr(5).c_str());
-  // for (int i = 0; i < String(cmd.substr(5).c_str()).toInt(); i++) {
-  //   Serial.println(cmd.substr(0,5).c_str());
-  // }
-  if (cmd.substr(0,5).compare("scan") && !cmd.substr(5).empty()) {
+  Serial.print((cmd.substr(0,4) == "scan") ? "true" : "false");
+  Serial.print(isDigit(cmd[5]) ? "true" : "false");
+
+  if (cmd.substr(0,4) == "scan" && isDigit(cmd[5])) { //scan n
     holdSerial = true;
-    //If cmd is "scan number", convert number to c_str to build arduino String to convert to Integer
-    Serial.print("Scanning for ");
-    Serial.print(String(cmd.substr(5).c_str() ).toInt());
-    Serial.println(" seconds.");
-    bt->scan( String( cmd.substr(5).c_str() ).toInt() );
-    Serial.println( (bt->isScanning) ? "true" : "false");
+    bt->scan(10);
+    Serial.println((bt->isScanning) ? "Begin Scanning..." : "Scan failed :(");
+  } else if (cmd.substr(0,5).compare("init") && cmd.length() == 5) { // init
+    Serial.println((BLEDevice::getInitialized()) ? "BLE is initialized" : "BLE is not initialized");
   }
 }
+*/
