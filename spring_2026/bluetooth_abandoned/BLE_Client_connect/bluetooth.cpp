@@ -58,8 +58,8 @@ bluetooth::bluetooth() : initializer(init_wrapper()),target_addr_mem(BLEAddress(
     auth->setCapability(ESP_IO_CAP_NONE); //Nothing can read or write to/from this device
 
     scanner = BLEDevice::getScan(); //Get ptr to internal scanning object
-    scanner->setInterval(1500); //Start a scan every 1500 ms
-    scanner->setWindow(1000); //Scan for 1000 ms
+    scanner->setInterval(100);
+    scanner->setWindow(100);
     scanner->setActiveScan(true); //forgot
     scanner->setAdvertisedDeviceCallbacks(new GappCallback); //when a device is found call GappCallback::onResult
 
@@ -86,7 +86,7 @@ void bluetooth::scan(uint32_t seconds) { //Start a scan with callbacks
 //Specifies an address of device to connect to.
 void bluetooth::setTarget(std::string mac_addr) {
 
-    target_addr_mem = BLEAddress(mac_addr); //set the target address
+    target_addr_mem = BLEAddress(String(mac_addr.c_str())); //set the target address
     for (int i = 0; i < results->getCount(); i++) { //Scan through scan results to check for device with address, if found then set it as the target
         if (results->getDevice(i).getAddress().equals(*target_addr)) {
             target_mem = results->getDevice(i);

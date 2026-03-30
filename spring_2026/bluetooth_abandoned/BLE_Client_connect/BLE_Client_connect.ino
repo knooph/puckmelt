@@ -10,17 +10,19 @@ bool holdSerial = false;
 
 void setup() {
   Serial.begin(115200);
-  Serial.setTimeout(30000);
-  OTA_init();
   bt = new bluetooth();
+  OTA_init();
+
+  Serial.println("Starting Scan");
   bt->scan(5);
-
-  delay(6000);
-
+  Serial.println("Scan Started");
+  delay(5000);
+  Serial.println(bt->results->getCount());
   for(int i = 0; i < bt->results->getCount(); i++) {
     Serial.print(i);
     Serial.print(") ");
-    Serial.println(bt->results->getDevice(i).toString().c_str());
+    bt->results->getDevice(i);
+    Serial.println(bt->results->getDevice(i).getServiceUUID().toString().c_str());
   }
 }
 
