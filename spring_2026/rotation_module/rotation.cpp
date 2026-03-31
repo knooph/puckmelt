@@ -40,7 +40,7 @@ float physicState::get_heading() { //I want high accuracy for the heading, but e
     // (raw + 32768)/65535 * 2pi
 }
 
-void physicState::update(int16_t nrm_xl, int16_t tan_xl, int16_t z_xl, int16_t rpm) {
+void physicState::update(float nrm_xl, float tan_xl, float z_xl, float rpm) {
     physicState::set(NRM_XL,nrm_xl); //set accelerometer readings
     physicState::set(TAN_XL,tan_xl);
     physicState::set(Z_XL,z_xl);

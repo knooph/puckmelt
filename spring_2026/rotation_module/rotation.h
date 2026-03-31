@@ -19,7 +19,7 @@ class physicState {
   static float y_xl();
   static float z_xl();
   static float get_heading();
-  static void update(int16_t NRM_XL, int16_t TAN_XL, int16_t Z_XL, int16_t ANG_V);
+  static void update(float NRM_XL, float TAN_XL, float Z_XL, float ANG_V);
 
   private:
   static int16_t state[5];
