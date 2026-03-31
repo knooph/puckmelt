@@ -1,7 +1,9 @@
 #include "rc.h"
 #include "network_id.h"
 
-receiver::receiver() {
+receiver::receiver() {}
+
+void receiver::init() {
   crsf = new CRSFforArduino();
   while(true) { //hold program hostage if crsf fails
     if(crsf->begin()){
