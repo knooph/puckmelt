@@ -4,13 +4,18 @@
 
 class receiver {
   public:
-  uint16_t throttle;
-  uint16_t fb_axis;
-  uint16_t lr_axis;
-  receiver();
-  void init();
+  static inline uint16_t throttle;
+  static inline uint16_t fb_axis;
+  static inline uint16_t lr_axis;
+  static inline CRSFforArduino* crsf;
 
-  private:
-  CRSFforArduino* crsf = nullptr;
-  void onReceive(serialReceiverLayer::rcChannels_t *rcChannels);
+  static void init();
+  static void onReceive(serialReceiverLayer::rcChannels_t *rcChannels);
+  static void printOnReceive(serialReceiverLayer::rcChannels_t *rcChannels);
+
+    static inline uint16_t channels[32];
+    static inline unsigned long time;
+    static inline uint32_t latency;
 };
+
+#define rc_update receiver::crsf->update
