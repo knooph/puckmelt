@@ -2,24 +2,28 @@
 #include "OTA.h"
 #include "rc.h"
 
+Wireless laptop = Wireless();
 receiver* rc = new receiver();
 
 void setup() {
   Serial.begin(115200);
-  //pinMode(PIN_RGB_LED, OUTPUT);
-  OTA_init();
-  rc->init();
+  laptop.init();
+  rc->init(laptop.getSerial());
 }
 
 void loop() {
-  OTA_handle();
+  laptop.handle();
   rc_update();
   unsigned long time = millis();
   if (time%1000 == 0) {
-    Serial.print("\n");
-    Serial.print(receiver::time);
-    Serial.print(" ");
-    Serial.println(receiver::latency);
-    for (uint16_t i : receiver::channels) Serial.println(i);
+    laptop.print("\n");
+    laptop.print(receiver::time);
+    laptop.print(" ");
+    laptop.println(receiver::latency);
+    for (uint16_t i : receiver::channels) laptop.println(i);
+  }
+  if (laptop.available() > 0) {
+    laptop.println(laptop.read());
+    laptop.println("Still here!");
   }
 }

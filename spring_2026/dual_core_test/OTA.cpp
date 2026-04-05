@@ -31,11 +31,7 @@ void Wireless::init() {
 
 void Wireless::connect() {
   client = server.available();
-  client.flush();
-}
-
-int Wireless::available() {
-  return client.available();
+  client.setTimeout(1);
 }
 
 String Wireless::read() {
@@ -46,9 +42,18 @@ void Wireless::handle() {
   ArduinoOTA.handle();
   if (!client.connected()) {
     client = server.available();
-  }
-}
+  
+    if (client.available() > 0) {
+      int bytesRead = client.readBytes(buffer, (client.available() >= 15) ? 15 : client.available()); //get bytes available for read
+      client.flush(); //flush stream in case there was overload
+      buffer[bytesRead] = '\0'; //format to be a proper c_string
+      client.println(buffer); //print the command so the user can see what they typed
 
-WiFiClient* Wireless::getSerial() {
-  return &client;
+      client.print("Wow, '");
+      client.print(buffer);
+      client.println("', absolutely riveting!");
+      
+      memcpy(buffer, "", 15); //clear the buffer
+    }
+  }
 }

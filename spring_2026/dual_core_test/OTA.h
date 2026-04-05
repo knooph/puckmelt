@@ -12,12 +12,12 @@ class Wireless{
     WiFiClient client;
     const char* SSID;
     const char* PASSWORD;
+    char buffer[16];
 
     public:
     Wireless();
     void init();
     void connect();
-    int available();
     String read();
     void handle();
 
@@ -30,7 +30,4 @@ class Wireless{
     void print(T data) {
         client.print(data);
     }
-
-    //debug tool
-    WiFiClient* getSerial();
 };

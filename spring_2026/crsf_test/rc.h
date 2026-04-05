@@ -13,9 +13,14 @@ class receiver {
   static void onReceive(serialReceiverLayer::rcChannels_t *rcChannels);
   static void printOnReceive(serialReceiverLayer::rcChannels_t *rcChannels);
 
-    static inline uint16_t channels[32];
-    static inline unsigned long time;
-    static inline uint32_t latency;
+
+  //debug tools
+  static void onLinkStatisticsUpdate(serialReceiverLayer::link_statistics_t linkStatistics);
+  static void init(WiFiClient* serial);
+  static inline WiFiClient* debug_out;
+  static inline uint16_t channels[32];
+  static inline unsigned long time;
+  static inline uint32_t latency;
 };
 
 #define rc_update receiver::crsf->update
