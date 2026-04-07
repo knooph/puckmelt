@@ -37,11 +37,12 @@ float physicState::y_xl() {
     return (p(NRM_XL) + pow(p(ANG_V),2) * WHEEL_RADIUS) * sin(p(ANGL)) + p(TAN_XL) * sin(p(ANGL)) * 9.81;
 }
 
+/*Update state values based on sensor readings. Uses wheel velocity to keep track of angle*/
 void physicState::update(float nrm_xl, float tan_xl, float z_xl, float rpm) {
     physicState::set(NRM_XL,nrm_xl); //set accelerometer readings
     physicState::set(TAN_XL,tan_xl);
     physicState::set(Z_XL, z_xl);
-    physicState::set(ANG_V,rpm * 6.28318530718 / 60 * WHEEL_RADIUS / WHEEL_DIST); //convert wheel rpm into bot s^-1
+    physicState::set(ANG_V,rpm * 2*PI / 60 * WHEEL_RADIUS / WHEEL_DIST); //convert wheel rpm into bot s^-1
     physicState::set(ANGL, p(ANGL) + p(ANG_V) * TIME_INTVL);
     physicState::set(X_V, p(X_V) + x_xl() * TIME_INTVL);
     physicState::set(Y_V, p(Y_V) + y_xl() * TIME_INTVL);
@@ -53,17 +54,75 @@ void physicState::update(float nrm_xl, float tan_xl, float z_xl, float rpm) {
     }
 }
 
-float physicState::motor_rpm(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset) {
-    float weapon_v = weapon_rpm * 6.28318530718 / 60 * WHEEL_DIST; //wheel tangent velocity to rotate bot at weapon rpm
-    float trans_v = v_trans * cos(p(ANGL) + angl_offset);
-    return flip_factor  *  (weapon_v + side * trans_v)  *  ( 60 / WHEEL_RADIUS / 6.28318530718);
-    //     reverse direction if flipped    get instant motor speed for side   convert to motor rpm
+/*Update state values based on sensor readings. Use tangent accel tp keep track of angle*/
+void physicState::update(float nrm_xl, float tan_xl, float z_xl) {
+    physicState::set(NRM_XL,nrm_xl); //set accelerometer readings
+    physicState::set(TAN_XL,tan_xl);
+    physicState::set(Z_XL, z_xl);
+    physicState::set(ANGL, p(ANGL) + p(ANG_V) * TIME_INTVL + 0.5 * tan_xl / WHEEL_DIST * pow(TIME_INTVL,2));
+    physicState::set(ANG_V, p(ANG_V) + tan_xl / WHEEL_DIST *TIME_INTVL); //convert wheel rpm into bot s^-1
+    physicState::set(X_V, p(X_V) + x_xl() * TIME_INTVL);
+    physicState::set(Y_V, p(Y_V) + y_xl() * TIME_INTVL);
+
+    if (p(Z_XL) > FLIP_SENSITIVITY/100) { //Idle when near 0 acceleration (freefall)
+        flip_factor = min(p(Z_XL)*1.1,1.00); //I played around with some more complex functions but linear is great for low idle speed
+    } else if (p(Z_XL) < FLIP_SENSITIVITY/100) {
+        flip_factor = max(p(Z_XL)*1.1,-1.00); //cap the flip factors at -1 and 1
+    }
 }
 
-
+float physicState::motor_throttle(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset) {
+    float weapon_v = weapon_rpm * 2*PI / 60 * WHEEL_DIST; //wheel tangent velocity to rotate bot at weapon rpm
+    float trans_v = v_trans * cos(p(ANGL) + angl_offset);
+    return controlHandler::v_to_rpm( flip_factor  *  (weapon_v + side * trans_v) )/ MAX_RPM_MTR;
+}
 /*----------------------------------------------------------------------------------------------*/
 
-/*controlHandle----------------------------------------------------------------------------------------------*/
+/*controlHandler----------------------------------------------------------------------------------------------*/
+//updates the controller state
+void controlHandler::control_in(int8_t y_dir, int8_t  x_dir, int8_t y_v, int8_t x_v, int8_t th){
+    y_direction = y_dir;
+    x_direciton = x_dir;
+    y_input = y_v;
+    x_input = x_v;
+    throttle = th;
+}
+//normalizes square input space (100 is max value)
+float controlHandler::get_magnitude(int8_t x_in, int8_t y_in){
+    float x_max = min(float(100),abs(100/tan(get_angle(x_in,y_in))));
+    float y_max = min(float(100),abs(100*tan(get_angle(x_in,y_in))));
+    return pow(x_in * x_in + y_in * y_in, 0.5) / pow(x_max * x_max + y_max * y_max, 0.5);
+}
+//Gets angle of input ccw from +x axis
+float controlHandler::get_angle(int8_t x_in, int8_t y_in){
+    float adjustment1 = (x_in < 0) ? PI : 0;
+    float adjustment2 = (atan2f(y_in,x_in) + adjustment1 < 0) ? 2*PI : 0;
+    return atan2f(y_in,x_in) + adjustment1 + adjustment2;
+}
 
+//Converts wheeel rpm to wheel velocity
+float controlHandler::rpm_to_v(float rpm) {
+    return rpm * 2*PI / 60 * WHEEL_RADIUS;
+}
 
+//convert wheel velocity to rpm
+float controlHandler::v_to_rpm(float velocity) {
+    return velocity / (2*PI * WHEEL_RADIUS) * 60;
+}
+
+//returns the desired translation velocity based on throttle
+float controlHandler::velocity() {
+    float max_v = rpm_to_v(MAX_RPM_MTR);
+    return (1 - throttle/100) * get_magnitude(x_input,y_input);
+}
+
+//returns the desired weapon rpm based on throttle
+float controlHandler::weapon_rpm() {
+    return throttle/100 * rpm_to_v(MAX_RPM_MTR)/WHEEL_DIST * 60 / (2*PI);
+}
+
+//return the angle offset
+float controlHandler::offset() {
+    return -1 * get_angle(x_direciton,y_direction);
+}
 /*----------------------------------------------------------------------------------------------*/
