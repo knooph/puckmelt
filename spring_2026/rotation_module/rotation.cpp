@@ -65,7 +65,7 @@ void physicState::update(float nrm_xl, float tan_xl, float z_xl) {
     physicState::set(Y_V, p(Y_V) + y_xl() * TIME_INTVL);
 
     if (p(Z_XL) > FLIP_SENSITIVITY/100) { //Idle when near 0 acceleration (freefall)
-        flip_factor = min(p(Z_XL)*1.1,1.00); //I played around with some more complex functions but linear is great for low idle speed
+        flip_factor = min(p(Z_XL)*1.1,1.00); //I played around with some more complex functions but linear is great for low air speed
     } else if (p(Z_XL) < FLIP_SENSITIVITY/100) {
         flip_factor = max(p(Z_XL)*1.1,-1.00); //cap the flip factors at -1 and 1
     }
@@ -73,19 +73,18 @@ void physicState::update(float nrm_xl, float tan_xl, float z_xl) {
 
 float physicState::motor_throttle(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset) {
     float weapon_v = weapon_rpm * 2*PI / 60 * WHEEL_DIST; //wheel tangent velocity to rotate bot at weapon rpm
-    float trans_v = v_trans * cos(p(ANGL) + angl_offset);
+    float trans_v = v_trans * cos(p(ANGL) - angl_offset);
     return controlHandler::v_to_rpm( flip_factor  *  (weapon_v + side * trans_v) )/ MAX_RPM_MTR;
 }
 /*----------------------------------------------------------------------------------------------*/
 
 /*controlHandler----------------------------------------------------------------------------------------------*/
 //updates the controller state
-void controlHandler::control_in(int8_t y_dir, int8_t  x_dir, int8_t y_v, int8_t x_v, int8_t th){
-    y_direction = y_dir;
-    x_direciton = x_dir;
+void controlHandler::control_in(int8_t x_v, int8_t y_v, int8_t th, int8_t of){
     y_input = y_v;
     x_input = x_v;
     throttle = th;
+    offset = of;
 }
 //normalizes square input space (100 is max value)
 float controlHandler::get_magnitude(int8_t x_in, int8_t y_in){
@@ -95,9 +94,9 @@ float controlHandler::get_magnitude(int8_t x_in, int8_t y_in){
 }
 //Gets angle of input ccw from +x axis
 float controlHandler::get_angle(int8_t x_in, int8_t y_in){
-    float adjustment1 = (x_in < 0) ? PI : 0;
-    float adjustment2 = (atan2f(y_in,x_in) + adjustment1 < 0) ? 2*PI : 0;
-    return atan2f(y_in,x_in) + adjustment1 + adjustment2;
+    // float adjustment1 = (x_in < 0) ? PI : 0;
+    // float adjustment2 = (atan2f(y_in,x_in) + adjustment1 < 0) ? 2*PI : 0;
+    return atan2f(y_in,x_in);// + adjustment1 + adjustment2;
 }
 
 //Converts wheeel rpm to wheel velocity
@@ -121,8 +120,7 @@ float controlHandler::weapon_rpm() {
     return throttle/100 * rpm_to_v(MAX_RPM_MTR)/WHEEL_DIST * 60 / (2*PI);
 }
 
-//return the angle offset
-float controlHandler::offset() {
-    return -1 * get_angle(x_direciton,y_direction);
+float controlHandler::get_offset() {
+    return offset *2*PI/100; //convert from percentage to angle
 }
 /*----------------------------------------------------------------------------------------------*/

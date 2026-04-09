@@ -46,8 +46,7 @@ class physicState {
 
 class controlHandler {
   private:
-  static int8_t y_direction;
-  static int8_t x_direciton;
+  static int8_t offset;
   static int8_t x_input;
   static int8_t y_input;
   static int8_t throttle;
@@ -55,11 +54,11 @@ class controlHandler {
   static float get_angle(int8_t x_in, int8_t y_in);
 
   public:
-  static void control_in(int8_t y_dr, int8_t  x_dir, int8_t y_v, int8_t x_v, int8_t th);
+  static void control_in(int8_t x_v, int8_t y_v, int8_t th, int8_t of);
   static float velocity();
   static float weapon_rpm();
-  static float offset();
-
+  static float get_offset();
+  
   static float rpm_to_v(float rpm);
   static float v_to_rpm(float velocity);
 };
