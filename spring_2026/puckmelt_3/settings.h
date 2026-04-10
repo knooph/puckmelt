@@ -18,8 +18,8 @@ extern uint8_t FLIP_SENSITIVITY; //percent of a 1G to idle in
 
 //Rotation module settings that cannot be adjusted at runtime (pre-processor)
 #define XL_RADIUS 0.01 //distance of accelerometer to bot center in meters
-#define WHEEL_DIST 1 //The distance from the wheel to bot center in meters
-#define WHEEL_RADIUS 1 //The effective radius of the wheel.
+#define WHEEL_DIST 0.07133 //The distance from the wheel to bot center in meters
+#define WHEEL_RADIUS 0.048 //The effective radius of the wheel.
 #define PI 3.14159265359
 
 //terminal access functions
@@ -30,4 +30,4 @@ class SETTINGS_ACCESS {
     friend void handle_terminal();
 };
 
-extern std::string graphic;
+extern String graphic;
