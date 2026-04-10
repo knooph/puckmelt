@@ -27,6 +27,7 @@ void setup() {
   xTaskCreatePinnedToCore(loop1, "Task1", 10000, NULL, 1, &Task1, 1);
 
   Serial.end();
+  laptop.print(graphic);
 }
 
 void loop() {}
@@ -81,7 +82,8 @@ void handle_terminal() {
     buffer.trim();
     execute = true;
   }
-
+  out->print("\e[29;1\e[0K");
+  out->print(buffer);
   //actual commands
   if (execute) {
     if (buffer.compareTo("kill") == 0) { //just set everything to 0
@@ -107,6 +109,9 @@ void handle_terminal() {
         SETTINGS_ACCESS::flip_sens(new_value);
       }
 
+    } else if (buffer.compareTo("refresh") == 0) {
+      out->print("\e[H");
+      out->print(graphic);
     }
   }
 }
