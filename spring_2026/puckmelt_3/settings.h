@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <ArduinoOTA.h> //Library for doing Over The Air stuff
 #include <CRSFforArduino.hpp>
+#include <string.h>
 
 //Wireless module settings (edit in .cpp file)
 extern const char* WiFi_SSID; //define in network_id.cpp
@@ -28,3 +29,5 @@ class SETTINGS_ACCESS {
     static void flip_sens(uint8_t value) {FLIP_SENSITIVITY = value;}
     friend void handle_terminal();
 };
+
+extern std::string graphic;
