@@ -14,6 +14,7 @@ void setup() {
   SPI.begin();
   x1.setSPICSPin(7);
   x1.begin(LIS331::USE_SPI);
+  x1.setFullScale(HIGH_RANGE);
   //x1.intSrcConfig(LIS331::INT_SRC, 1); 
   //x1.setIntDuration(50, 1);
   //x1.setIntThreshold(2,1);
@@ -30,9 +31,9 @@ void loop() {
     loopTimer = millis();
     x1.readAxes(x, y, z);
 
-    Serial.println(x1.convertToG(30,x));
-    Serial.println(x1.convertToG(30,y));
-    Serial.println(x1.convertToG(30,z));
+    Serial.println(x1.convertToG(24,x));
+    Serial.println(x1.convertToG(24,y));
+    Serial.println(x1.convertToG(24,z));
     Serial.println(" ");
   }
   //if (digitalRead(10) == HIGH)
