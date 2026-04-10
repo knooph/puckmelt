@@ -1,4 +1,4 @@
-#include "OTA.h"
+#include "wireless.h"
 
 Wireless::Wireless() {
   server = WiFiServer(SERVER_PORT);
@@ -6,6 +6,7 @@ Wireless::Wireless() {
   PASSWORD = WiFi_PASSWORD;
 }
 
+/*Initialize wifi and ota libraries*/
 void Wireless::init() {
   Serial.println("Connecting...");
   WiFi.mode(WIFI_STA);
@@ -36,19 +37,23 @@ void Wireless::init() {
   connect();
 }
 
+/*connect to laptop (client)*/
 void Wireless::connect() {
   client = server.available();
 }
 
+/*if stuff in the client serial buffer*/
 int Wireless::available() {
   if (!WiFiEnabled) { return 0; } //if wifi never initialized don't do anything
   return client.available();
 }
 
+/*read the stuff in client serial buffer*/
 String Wireless::read() {
   return client.readString();
 }
 
+/*handle wifi updates (run this in loop)*/
 void Wireless::handle() {
   if (!WiFiEnabled) { return; } //if wifi never initialized don't don't do anything
   ArduinoOTA.handle();

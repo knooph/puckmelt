@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include "OTA.h"
-#include "rc.h"
+#include "wireless.h"
+#include "radio.h"
 
 Wireless laptop = Wireless();
 receiver* rc = new receiver();
@@ -8,7 +8,7 @@ receiver* rc = new receiver();
 void setup() {
   Serial.begin(115200);
   laptop.init();
-  rc->init(laptop.getSerial());
+  rc->init();
 }
 
 void loop() {

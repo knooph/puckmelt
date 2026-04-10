@@ -7,20 +7,15 @@ class receiver {
   static inline uint16_t throttle;
   static inline uint16_t fb_axis;
   static inline uint16_t lr_axis;
+  static inline uint16_t angle;
+  static inline uint8_t quality; //percentage of information that's actually getting through. I read online that above 80% is safe
+
   static inline CRSFforArduino* crsf;
+  static inline unsigned long last_receive_time;
+  static inline bool watchdog_enable = false;
 
   static void init();
   static void onReceive(serialReceiverLayer::rcChannels_t *rcChannels);
-  static void printOnReceive(serialReceiverLayer::rcChannels_t *rcChannels);
-
-
-  //debug tools
   static void onLinkStatisticsUpdate(serialReceiverLayer::link_statistics_t linkStatistics);
-  static void init(WiFiClient* serial);
-  static inline WiFiClient* debug_out;
-  static inline uint16_t channels[32];
-  static inline unsigned long time;
-  static inline uint32_t latency;
+  static void handle();
 };
-
-#define rc_update receiver::crsf->update

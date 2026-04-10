@@ -1,11 +1,9 @@
 #include <Arduino.h>
 #include "network_id.h" //import the wifi credentials
 #include <WiFi.h> //Library for utilizie the wifi capabilities of the microcontroller
-#include <ArduinoOTA.h> //Library for doing Over The Air stuff
+#include <ArduinoOTA.h> //Library for doing over the air stuff
 
-void OTA_init();
-
-#define OTA_handle 
+#include <string.h>
 
 class Wireless{
     bool WiFiEnabled = false;
@@ -33,4 +31,6 @@ class Wireless{
         if (!WiFiEnabled) { return; }
         client.print(data);
     }
+
+    friend class cmdHandle;
 };
