@@ -1,5 +1,4 @@
 #include "radio.h"
-#include "network_id.h"
 
 //initialize module
 void Receiver::init() {
@@ -19,7 +18,7 @@ void Receiver::init() {
 }
 
 void Receiver::onReceive(serialReceiverLayer::rcChannels_t *rcChannels) {
-  if (!rcChannels->failsafe) { //if the builtin failsafe isn't active, update channels, otherwise set to 0
+  if (!rcChannels->failsafe && !watchdog_enable) { //if the builtin failsafe isn't active, update channels, otherwise set to 0
     angle = crsf->rcToUs(crsf->getChannel(1));
     throttle = crsf->rcToUs(crsf->getChannel(2));
     fb_axis = crsf->rcToUs(crsf->getChannel(4));

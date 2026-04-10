@@ -1,13 +1,5 @@
 #pragma once
-#include <Arduino.h>
-
-#define TIME_INTVL 1/2400000 //The time between updates in seconds
-#define XL_RADIUS 0.01 //distance of accelerometer to bot center in meters
-#define WHEEL_DIST 1 //The distance from the wheel to bot center in meters
-#define WHEEL_RADIUS 1 //The effective radius of the wheel.
-#define MAX_RPM_MTR 30000 //the maximum motor speed in rpm
-#define FLIP_SENSITIVITY 5 //percent of a 1G to idle in
-#define PI 3.14159265359
+#include "settings.h"
 
 /*NRM_XL, 0.01
   TAN_XL, 0.01
@@ -42,6 +34,9 @@ class physicState {
   static int8_t flip_factor;
   static int16_t state[7];
   static void set(PHYS_VAL index, float value);
+
+  //allows terminal access to private members
+  friend void handle_terminal();
 };
 
 class controlHandler {
@@ -61,4 +56,7 @@ class controlHandler {
   
   static float rpm_to_v(float rpm);
   static float v_to_rpm(float velocity);
+
+  //allows terminal access to private members
+  friend void handle_terminal();
 };

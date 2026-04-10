@@ -1,6 +1,5 @@
 #pragma once
-#include <CRSFforArduino.hpp>
-#include "network_id.h"
+#include "settings.h"
 
 class Receiver {
   public:
@@ -18,4 +17,7 @@ class Receiver {
   static void onReceive(serialReceiverLayer::rcChannels_t *rcChannels);
   static void onLinkStatisticsUpdate(serialReceiverLayer::link_statistics_t linkStatistics);
   static void handle();
+
+  //allows terminal access to private members
+  friend void handle_terminal();
 };
