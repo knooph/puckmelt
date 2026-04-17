@@ -3,13 +3,14 @@ local tabl = dofile("tan.lua")
 
 function move_x(x_start,x_end,y_value)
     for var = x_start, x_end, (x_end - x_start) / 10 do
-        print( var .. " " .. y_value .. "\t" .. (tabl.run(var,y_value) + 100) / 100 .. " pi")
+        print( var .. " " .. y_value .. "\t" .. (tabl.run(var,y_value) + 0) / 1 .. " pi")
     end
 end
 
 function move_y(x_value,y_start,y_end)
     for var = y_start, y_end, (y_end - y_start) / 10 do
-        print( x_value .. " " .. var .. "\t" .. (tabl.run(x_value,var) + 100) / 100 .. " pi")
+        print( x_value .. " " .. var .. "\t" .. (tabl.run(x_value,var) + 0) / 1 .. " pi")
+
     end
 end
 
