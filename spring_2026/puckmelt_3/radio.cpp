@@ -53,3 +53,7 @@ void Receiver::handle() {
     throttle = 0;
   }
 }
+
+void Receiver::batt_telemetry(float voltage, float current, uint32_t fuel, uint8_t percent) {
+  crsf->telemetryWriteBattery(voltage, current, fuel, percent);
+}

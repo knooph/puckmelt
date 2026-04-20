@@ -13,7 +13,6 @@ robot.listen(1)
 print("Waiting for connection...")
 laptop, address = robot.accept()
 print("Connection established!")
-
 time = 0.01
 data_1 = 10
 while True:

@@ -49,7 +49,7 @@ void physicState::update(float nrm_xl, float tan_xl, float z_xl, float rpm) {
 
     if (p(Z_XL) > FLIP_SENSITIVITY/100) { //Idle when near 0 acceleration (freefall)
         flip_factor = min(p(Z_XL)*1.1,1.00); //I played around with some more complex functions but linear is great for low idle speed
-    } else if (p(Z_XL) < FLIP_SENSITIVITY/100) {
+    } else if (p(Z_XL) < FLIP_SENSITIVITY/-100) {
         flip_factor = max(p(Z_XL)*1.1,-1.00); //cap the flip factors at -1 and 1
     }
 }

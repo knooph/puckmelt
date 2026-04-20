@@ -38,23 +38,26 @@ void loop0(void* pvParameters) {
   radio.handle();
   xl.update();
   puckmath.update(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS)); //   <<Y AXIS, X AXIS, Z AXIS
-  
+
   puckmath.motor_throttle(RIGHT, controller.velocity(), controller.weapon_rpm(), controller.get_offset());// How to getRight motor throttle
   puckmath.motor_throttle(LEFT, controller.velocity(), controller.weapon_rpm(), controller.get_offset());// How to get left motor throttle
 }
 
 void loop1(void* pvParameters) {
   laptop.handle();
+  radio.batt_telemetry(0.0,0.0,0,0);//  <<<<BATTERY TELEMETRY HERE
   controller.in(radio.lr_axis, radio.fb_axis, radio.throttle, radio.angle);
   send_data(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS));
   handle_terminal();
 }
 
+
+
 void send_data(float nrml_xl, float tan_xl, float z_xl) {
   String csv_line = String(nrml_xl) + "," +String(tan_xl) + "," + String(z_xl);
   laptop.println(csv_line);
 }
-//This is command logic for the PuTTy terminal
+
 void handle_terminal() {
   if (!laptop.WiFiEnabled || !laptop.client.connected()) { return; } //quit if wifi is not enabled or client isnt connected
 

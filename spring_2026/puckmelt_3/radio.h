@@ -17,6 +17,7 @@ class Receiver {
   static void onReceive(serialReceiverLayer::rcChannels_t *rcChannels);
   static void onLinkStatisticsUpdate(serialReceiverLayer::link_statistics_t linkStatistics);
   static void handle();
+  static void batt_telemetry(float voltage, float current, uint32_t fuel, uint8_t percent);
 
   //allows terminal access to private members
   friend void handle_terminal();
