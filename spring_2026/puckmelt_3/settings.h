@@ -23,10 +23,10 @@ extern uint8_t FLIP_SENSITIVITY; //percent of a 1G to idle in
 #define PI 3.14159265359
 
 //pre-processor Receiver module settings
-#define LEFT_RIGHT_CHANNEL 3
-#define FORWARD_BACKWRAD_CHANNEL 4
-#define THROTTLE_CHANNEL 2
-#define ANGLE_OFFSET_CHANNEL 1
+#define LEFT_RIGHT_CHANNEL 1
+#define FORWARD_BACKWRAD_CHANNEL 2
+#define THROTTLE_CHANNEL 4
+#define ANGLE_OFFSET_CHANNEL 3
 
 
 //terminal access functions

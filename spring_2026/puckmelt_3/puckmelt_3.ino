@@ -2,6 +2,7 @@
 #include "wireless.h"
 #include "rotation.h"
 #include "accel.h"
+#include "MOTOR_PLACEHOLDER.h"
 
 Wireless laptop = Wireless(); //WiFi interface witht the robot.
 Receiver radio; //Represents actual receiver on the robot. Read user input off this object
@@ -9,8 +10,12 @@ controlHandler controller; //Converts driver input into useful information for t
 physicState puckmath; //does the real-time rotational kinematics using information from the controller. Read target motor throttle off of this object
 Accelerometer xl = Accelerometer();
 
+MOTOR_PLACEHOLDER rmotor;
+MOTOR_PLACEHOLDER lmotor;
+
 TaskHandle_t Task0;// Everything on core 0
 TaskHandle_t Task1;//Everything on core 1
+
 
 void handle_terminal();//forward declaration
 
@@ -39,8 +44,8 @@ void loop0(void* pvParameters) {
   xl.update();
   puckmath.update(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS)); //   <<Y AXIS, X AXIS, Z AXIS
 
-  puckmath.motor_throttle(RIGHT, controller.velocity(), controller.weapon_rpm(), controller.get_offset());// How to getRight motor throttle
-  puckmath.motor_throttle(LEFT, controller.velocity(), controller.weapon_rpm(), controller.get_offset());// How to get left motor throttle
+  rmotor.GO( puckmath.motor_throttle(RIGHT, controller.velocity(), controller.weapon_rpm(), controller.get_offset()) );// How to getRight motor throttle
+  lmotor.GO( puckmath.motor_throttle(LEFT, controller.velocity(), controller.weapon_rpm(), controller.get_offset()) );// How to get left motor throttle
 }
 
 void loop1(void* pvParameters) {
