@@ -19,10 +19,10 @@ void Receiver::init() {
 
 void Receiver::onReceive(serialReceiverLayer::rcChannels_t *rcChannels) {
   if (!rcChannels->failsafe && !watchdog_enable) { //if the builtin failsafe isn't active, update channels, otherwise set to 0
-    angle = crsf->rcToUs(crsf->getChannel(1));
-    throttle = crsf->rcToUs(crsf->getChannel(2));
-    fb_axis = crsf->rcToUs(crsf->getChannel(4));
-    lr_axis = crsf->rcToUs(crsf->getChannel(3));
+    angle = crsf->rcToUs(crsf->getChannel(ANGLE_OFFSET_CHANNEL));
+    throttle = crsf->rcToUs(crsf->getChannel(THROTTLE_CHANNEL));
+    fb_axis = crsf->rcToUs(crsf->getChannel(FORWARD_BACKWRAD_CHANNEL));
+    lr_axis = crsf->rcToUs(crsf->getChannel(LEFT_RIGHT_CHANNEL));
   } else {
     fb_axis = 0;
     lr_axis = 0;

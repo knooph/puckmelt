@@ -8,7 +8,7 @@ enum AXIS {
   Z_AXIS = 2
 };
 
-class accel{
+class Accelerometer{
   LIS331 x1;
   int16_t scale1000[3];
   int16_t offset1000[3];

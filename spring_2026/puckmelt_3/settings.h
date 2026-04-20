@@ -22,6 +22,13 @@ extern uint8_t FLIP_SENSITIVITY; //percent of a 1G to idle in
 #define WHEEL_RADIUS 0.048 //The effective radius of the wheel.
 #define PI 3.14159265359
 
+//pre-processor Receiver module settings
+#define LEFT_RIGHT_CHANNEL 3
+#define FORWARD_BACKWRAD_CHANNEL 4
+#define THROTTLE_CHANNEL 2
+#define ANGLE_OFFSET_CHANNEL 1
+
+
 //terminal access functions
 class SETTINGS_ACCESS {
     static void max_rpm(uint value) {MAX_RPM_MTR = value;}
