@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include <ArduinoOTA.h> //Library for doing Over The Air stuff
 #include <CRSFforArduino.hpp>
+#include <SPI.h>
 
 //Wireless module settings (edit in .cpp file)
 extern const char* WiFi_SSID; //define in network_id.cpp

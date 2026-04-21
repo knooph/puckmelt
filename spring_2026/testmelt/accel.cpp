@@ -1,5 +1,4 @@
 #include "accel.h"
-#include <math.h>
 
 void Accelerometer::init(){
   x1 = LIS331();

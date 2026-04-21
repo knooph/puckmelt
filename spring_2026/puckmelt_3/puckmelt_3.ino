@@ -33,27 +33,32 @@ void setup() {
   xTaskCreatePinnedToCore(loop1, "Task1", 10000, NULL, 1, &Task1, 1);
 
   Serial.end();
-  laptop.print(graphic);
 }
 
 void loop() {}
 
 //core0 will be dedicated to the tasks that need to be exxecuted in real time like sensor input and motor output.
 void loop0(void* pvParameters) {
-  radio.handle();
-  xl.update();
-  puckmath.update(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS)); //   <<Y AXIS, X AXIS, Z AXIS
+  for (;;) {
+    radio.handle();
+    xl.update();
+    puckmath.update(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS)); //   <<Y AXIS, X AXIS, Z AXIS
 
-  rmotor.GO( puckmath.motor_throttle(RIGHT, controller.velocity(), controller.weapon_rpm(), controller.get_offset()) );// How to getRight motor throttle
-  lmotor.GO( puckmath.motor_throttle(LEFT, controller.velocity(), controller.weapon_rpm(), controller.get_offset()) );// How to get left motor throttle
+    rmotor.GO( puckmath.motor_throttle(RIGHT, controller.velocity(), controller.weapon_rpm(), controller.get_offset()) );// How to getRight motor throttle
+    lmotor.GO( puckmath.motor_throttle(LEFT, controller.velocity(), controller.weapon_rpm(), controller.get_offset()) );// How to get left motor throttle
+  }
+  vTaskDelete(NULL); //if the task ends delete it
 }
 
 void loop1(void* pvParameters) {
-  laptop.handle();
-  radio.batt_telemetry(0.0,0.0,0,0);//  <<<<BATTERY TELEMETRY HERE
-  controller.in(radio.lr_axis, radio.fb_axis, radio.throttle, radio.angle);
-  send_data(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS));
-  handle_terminal();
+  for (;;) {
+    laptop.handle();
+    radio.batt_telemetry(0.0,0.0,0,0);//  <<<<BATTERY TELEMETRY HERE
+    controller.in(radio.lr_axis, radio.fb_axis, radio.throttle, radio.angle);
+    send_data(xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS));
+    handle_terminal();
+  }
+  vTaskDelete(NULL); //if the task ends delete it
 }
 
 

@@ -13,7 +13,7 @@ function getangle(x_in, y_in)
     end
     local angle = math.atan(y_in, x_in) + adjust
 
-    return 512 / math.pi * angle - 512 --, math.abs(x_in) > 10 or math.abs(y_in) > 10
+    return 1024 / math.pi * angle - 1024 --, math.abs(x_in) > 10 or math.abs(y_in) > 10
 end
 
 return { input=input, run=getangle, output={"ANGLE"} }
