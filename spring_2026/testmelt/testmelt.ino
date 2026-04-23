@@ -2,7 +2,7 @@
 #include "wireless.h"
 #include "rotation.h"
 #include "accel.h"
-#include "MOTOR_PLACEHOLDER.h"
+#include "motor.h"
 
 Wireless laptop = Wireless(); //WiFi interface witht the robot.
 Receiver radio; //Represents actual receiver on the robot. Read user input off this object
@@ -10,8 +10,8 @@ controlHandler controller; //Converts driver input into useful information for t
 physicState puckmath; //does the real-time rotational kinematics using information from the controller. Read target motor throttle off of this object
 Accelerometer xl = Accelerometer();
 
-MOTOR_PLACEHOLDER rmotor;
-MOTOR_PLACEHOLDER lmotor;
+puckMotor rmotor = puckMotor(10);
+puckMotor lmotor = puckMotor(11);
 
 TaskHandle_t main_loop;
 
@@ -89,8 +89,8 @@ void motor_loop(void* pvParameters) {
       r = 10;
       l = 10;
     }
-    rmotor.GO(r);
-    lmotor.GO(l);
+    rmotor.throttle(r);
+    lmotor.throttle(l);
     String data = String(l) + "," + String(r);
     radio.batt_telemetry(1,2,3,4);
     laptop.println(data);
