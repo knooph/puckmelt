@@ -1,5 +1,4 @@
-#include <Arduino.h>
-#include <SPI.h>
+#include "settings.h"
 #include "SparkFun_LIS331.h"
 
 enum AXIS {
