@@ -114,6 +114,9 @@ void rotation_loop(void* pvParameters) {
     laptop.handle();
     radio.handle();
     handle_terminal();
+
+
+    
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
