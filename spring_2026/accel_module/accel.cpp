@@ -4,12 +4,12 @@
 void Accelerometer::init(){
   x1 = LIS331();
   pinMode(INT1_PIN, INPUT); // interrupt
-  pinMode(SS_PIN, OUTPUT); // cs 
-  digitalWrite(SS_PIN, HIGH); // set cs high
+  pinMode(SS_PIN, OUTPUT); // ss 
+  digitalWrite(SS_PIN, HIGH); // set ss high
   pinMode(MOSI_PIN, OUTPUT); // mosi 
   pinMode(MISO_PIN, INPUT); // miso 
-  pinMode(SCK_PIN, OUTPUT); // sclk 
-  SPI.begin();
+  pinMode(SCK_PIN, OUTPUT); // sck 
+  SPI.begin(SCK_PIN,MISO_PIN,MOSI_PIN,SS_PIN);
   x1.setSPICSPin(SS_PIN);
   x1.begin(LIS331::USE_SPI);
   x1.setFullScale(LIS331::HIGH_RANGE);
@@ -17,6 +17,10 @@ void Accelerometer::init(){
   // x1.enableHPF(true);
   scale1000[0],scale1000[1],scale1000[2] = 1000,1000,1000;
   offset1000[0],offset1000[1],offset1000[2] = 0,0,0;
+  while (!Serial.isConnected()) {
+    delay(10);
+  }
+  delay(100);
   Serial.println("Accelerometer ready!");
 }
 
