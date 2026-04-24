@@ -15,8 +15,6 @@ void accel::init(){
   x1.setSPICSPin(7);
   x1.begin(LIS331::USE_SPI);
   x1.setFullScale(LIS331::HIGH_RANGE);
-  x1.setHighPassCoeff(LIS331::HPC_16);
-  x1.enableHPF(true);
   Serial.println("Accelerometer ready!");
 }
 

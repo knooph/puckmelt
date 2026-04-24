@@ -1,7 +1,7 @@
 import socket
 
 MY_MACHINE = "127.0.0.1" #for simulating robot connection locallu
-HOST = "192.168.137.6"   # ESP IP address
+HOST = "192.168.137.172"   # ESP IP address
 PORT = 32 # ESP WiFi Port
 
 robot = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -10,4 +10,5 @@ void setup() {
 
 void loop() {
   laptop.handle();
+  laptop.println("0,1,2,3,4");
 }

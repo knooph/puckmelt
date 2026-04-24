@@ -29,7 +29,6 @@ extern uint8_t FLIP_SENSITIVITY; //percent of a 1G to idle in
 #define THROTTLE_CHANNEL 4
 #define ANGLE_OFFSET_CHANNEL 3
 
-
 //terminal access functions
 class SETTINGS_ACCESS {
     static void max_rpm(uint value) {MAX_RPM_MTR = value;}
