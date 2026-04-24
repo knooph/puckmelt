@@ -2,11 +2,11 @@
 #include <SPI.h>
 #include "SparkFun_LIS331.h"
 
-#define CS_PIN GPIO_NUM_10
-#define SAO_PIN GPIO_NUM_20
+#define MISO_PIN GPIO_NUM_5
+#define MOSI_PIN GPIO_NUM_6
+#define SS_PIN GPIO_NUM_7
+#define SCK_PIN GPIO_NUM_4
 #define INT1_PIN GPIO_NUM_21
-#define SCL_PIN GPIO_NUM_1
-#define SDA_PIN GPIO_NUM_0
 
 enum AXIS {
   X_AXIS = 0,

@@ -4,13 +4,13 @@
 void Accelerometer::init(){
   x1 = LIS331();
   pinMode(INT1_PIN, INPUT); // interrupt
-  pinMode(CS_PIN, OUTPUT); // cs 
-  digitalWrite(CS_PIN, HIGH); // set cs high
-  pinMode(SDA_PIN, OUTPUT); // mosi 
-  pinMode(SAO_PIN, INPUT); // miso 
-  pinMode(SCL_PIN, OUTPUT); // sclk 
-  SPI.begin(SCL_PIN,SAO_PIN,SDA_PIN,CS_PIN);
-  x1.setSPICSPin(CS_PIN);
+  pinMode(SS_PIN, OUTPUT); // cs 
+  digitalWrite(SS_PIN, HIGH); // set cs high
+  pinMode(MOSI_PIN, OUTPUT); // mosi 
+  pinMode(MISO_PIN, INPUT); // miso 
+  pinMode(SCK_PIN, OUTPUT); // sclk 
+  SPI.begin();
+  x1.setSPICSPin(SS_PIN);
   x1.begin(LIS331::USE_SPI);
   x1.setFullScale(LIS331::HIGH_RANGE);
   // x1.setHighPassCoeff(LIS331::HPC_16);
