@@ -15,11 +15,12 @@ void Accelerometer::init(){
   x1.setFullScale(LIS331::HIGH_RANGE);
   // x1.setHighPassCoeff(LIS331::HPC_16);
   // x1.enableHPF(true);
-  scale1000[0],scale1000[1],scale1000[2] = 1000,1000,1000;
-  offset1000[0],offset1000[1],offset1000[2] = 0,0,0;
-  while (!Serial.isConnected()) {
-    delay(10);
-  }
+  scale1000[0] = 1000;
+  scale1000[1] = 1000;
+  scale1000[2] = 1000;
+  offset1000[0] = 0;
+  offset1000[1] = 0;
+  offset1000[2] = 0;
   delay(100);
   Serial.println("Accelerometer ready!");
 }
@@ -45,5 +46,5 @@ void Accelerometer::setScale(AXIS axis, float scale) {
 }
 
 void Accelerometer::setOffset(AXIS axis, float offset) {
-  scale1000[axis] = offset * 1000;
+  offset1000[axis] = offset * 1000;
 }

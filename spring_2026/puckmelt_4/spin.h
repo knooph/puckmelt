@@ -8,10 +8,11 @@ enum SIDE {
 class spin {
     public:
     spin();
-    static float angle;
-    static float angle_step;
-    static uint8_t base_speed;
-    static float wheel_speed(SIDE side, float angle_inject);
-    static void set_step(float new_step);
-    static void step();
+    static inline float angle;
+    static inline float angle_step;
+    static inline float max_speed;
+    static float wheel_speed(SIDE side, uint8_t throttle_percent);
+    static void step(float angle_inject);
 };
+
+float speed_to_throttle(float speed);

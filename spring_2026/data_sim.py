@@ -10,7 +10,7 @@ random.seed(1)
 
 time.sleep(0.2)
 robot = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-robot.bind(("0.0.0.0", 32))
+robot.bind(("0.0.0.0", 5000))
 robot.listen(1)
 print("Waiting for connection...")
 laptop, address = robot.accept()

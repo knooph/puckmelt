@@ -1,4 +1,4 @@
-#include "settings.h" //import the wifi credentials
+#include "settings.h"
 
 class Wireless{
     bool WiFiEnabled = false;

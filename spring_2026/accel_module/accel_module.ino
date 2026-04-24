@@ -12,6 +12,7 @@ void setup() {
 }
 
 void loop() {
+  foo.update();
   // String line = String(foo.adjustedAccel(X_AXIS)) + ", " + String(foo.adjustedAccel(Y_AXIS)) +", "+ String(foo.adjustedAccel(Z_AXIS));
   String line = String(foo.rawAccel(X_AXIS)) + ", " + String(foo.rawAccel(Y_AXIS)) +", "+ String(foo.rawAccel(Z_AXIS));
   if (line.compareTo("0.00, 0.00, 0.00") != 0) {

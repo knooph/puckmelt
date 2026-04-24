@@ -60,6 +60,8 @@ void wireless_loop(void* pvParameters) {
   for (;;) {
     laptop.handle();
     handle_terminal();
+
+    laptop.println(String(millis()) +",4.5,3");
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
