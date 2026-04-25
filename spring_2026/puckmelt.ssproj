@@ -13,7 +13,7 @@
                     "fftMin": 0,
                     "fftSamples": 256,
                     "fftSamplingRate": 100,
-                    "graph": true,
+                    "graph": false,
                     "index": 1,
                     "led": false,
                     "ledHigh": 80,
@@ -21,12 +21,12 @@
                     "overviewDisplay": false,
                     "plotMax": 0,
                     "plotMin": 0,
-                    "title": "New Plot",
+                    "title": "forward/backward",
                     "units": "",
                     "value": "--.--",
-                    "widget": "",
-                    "widgetMax": 0,
-                    "widgetMin": 0,
+                    "widget": "gauge",
+                    "widgetMax": 100,
+                    "widgetMin": -100,
                     "xAxis": -1
                 },
                 {
@@ -38,7 +38,7 @@
                     "fftMin": 0,
                     "fftSamples": 256,
                     "fftSamplingRate": 100,
-                    "graph": true,
+                    "graph": false,
                     "index": 2,
                     "led": false,
                     "ledHigh": 80,
@@ -46,12 +46,12 @@
                     "overviewDisplay": false,
                     "plotMax": 0,
                     "plotMin": 0,
-                    "title": "New Plot (2)",
+                    "title": "left/right",
                     "units": "",
                     "value": "--.--",
-                    "widget": "",
-                    "widgetMax": 0,
-                    "widgetMin": 0,
+                    "widget": "gauge",
+                    "widgetMax": 100,
+                    "widgetMin": -100,
                     "xAxis": -1
                 },
                 {
@@ -63,7 +63,7 @@
                     "fftMin": 0,
                     "fftSamples": 256,
                     "fftSamplingRate": 100,
-                    "graph": true,
+                    "graph": false,
                     "index": 3,
                     "led": false,
                     "ledHigh": 80,
@@ -71,17 +71,123 @@
                     "overviewDisplay": false,
                     "plotMax": 0,
                     "plotMin": 0,
-                    "title": "New Plot (3)",
+                    "title": "angle",
                     "units": "",
                     "value": "--.--",
-                    "widget": "",
-                    "widgetMax": 0,
+                    "widget": "gauge",
+                    "widgetMax": 100,
+                    "widgetMin": -100,
+                    "xAxis": -1
+                },
+                {
+                    "alarmEnabled": false,
+                    "alarmHigh": 80,
+                    "alarmLow": 20,
+                    "fft": false,
+                    "fftMax": 0,
+                    "fftMin": 0,
+                    "fftSamples": 256,
+                    "fftSamplingRate": 100,
+                    "graph": false,
+                    "index": 4,
+                    "led": false,
+                    "ledHigh": 80,
+                    "log": false,
+                    "overviewDisplay": false,
+                    "plotMax": 0,
+                    "plotMin": 0,
+                    "title": "throttle",
+                    "units": "",
+                    "value": "--.--",
+                    "widget": "gauge",
+                    "widgetMax": 100,
                     "widgetMin": 0,
                     "xAxis": -1
                 }
             ],
             "title": "Group",
             "widget": ""
+        },
+        {
+            "datasets": [
+                {
+                    "alarmEnabled": false,
+                    "alarmHigh": 0,
+                    "alarmLow": 0,
+                    "fft": false,
+                    "fftMax": 0,
+                    "fftMin": 0,
+                    "fftSamples": 256,
+                    "fftSamplingRate": 100,
+                    "graph": true,
+                    "index": 5,
+                    "led": false,
+                    "ledHigh": 80,
+                    "log": false,
+                    "overviewDisplay": false,
+                    "plotMax": 0,
+                    "plotMin": 0,
+                    "title": "Accelerometer Centripetal",
+                    "units": "m/s²",
+                    "value": "--.--",
+                    "widget": "x",
+                    "widgetMax": 0,
+                    "widgetMin": 0,
+                    "xAxis": -1
+                },
+                {
+                    "alarmEnabled": false,
+                    "alarmHigh": 0,
+                    "alarmLow": 0,
+                    "fft": false,
+                    "fftMax": 0,
+                    "fftMin": 0,
+                    "fftSamples": 256,
+                    "fftSamplingRate": 100,
+                    "graph": true,
+                    "index": 6,
+                    "led": false,
+                    "ledHigh": 80,
+                    "log": false,
+                    "overviewDisplay": false,
+                    "plotMax": 0,
+                    "plotMin": 0,
+                    "title": "Accelerometer Tangential",
+                    "units": "m/s²",
+                    "value": "--.--",
+                    "widget": "y",
+                    "widgetMax": 0,
+                    "widgetMin": 0,
+                    "xAxis": -1
+                },
+                {
+                    "alarmEnabled": false,
+                    "alarmHigh": 0,
+                    "alarmLow": 0,
+                    "fft": false,
+                    "fftMax": 0,
+                    "fftMin": 0,
+                    "fftSamples": 256,
+                    "fftSamplingRate": 100,
+                    "graph": true,
+                    "index": 7,
+                    "led": false,
+                    "ledHigh": 80,
+                    "log": false,
+                    "overviewDisplay": false,
+                    "plotMax": 0,
+                    "plotMin": 0,
+                    "title": "Accelerometer Z",
+                    "units": "m/s²",
+                    "value": "--.--",
+                    "widget": "z",
+                    "widgetMax": 0,
+                    "widgetMin": 0,
+                    "xAxis": -1
+                }
+            ],
+            "title": "Accelerometer",
+            "widget": "accelerometer"
         }
     ],
     "hexadecimalDelimiters": false,
@@ -92,9 +198,9 @@
             "checksum": "",
             "checksumAlgorithm": "",
             "connection": {
-                "address": "127.0.0.1",
+                "address": "192.168.137.218",
                 "socketTypeIndex": 0,
-                "tcpPort": 5000
+                "tcpPort": 32
             },
             "decoder": 0,
             "decoderMethod": 0,
@@ -109,6 +215,21 @@
     ],
     "title": "puckmelt",
     "widgetSettings": {
+        "2:1:-1": {
+            "userShowLegends": true
+        },
+        "3:1:-1": {
+            "displayMaxG": 16
+        },
+        "layout:-1": {
+            "data": {
+                "autoLayout": true,
+                "windowOrder": [
+                    0,
+                    2
+                ]
+            }
+        },
         "layout:-2": {
             "data": {
                 "autoLayout": true,

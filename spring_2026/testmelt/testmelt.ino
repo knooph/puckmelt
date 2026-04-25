@@ -13,6 +13,8 @@ Accelerometer xl = Accelerometer();
 puckMotor rmotor = puckMotor(10);
 puckMotor lmotor = puckMotor(11);
 
+String debug = "";
+
 TaskHandle_t main_loop;
 
 void handle_terminal();//forward declaration
@@ -21,19 +23,18 @@ void setup() {
   Serial.begin(115200); //Don't actually need this, but leaving it here for debug output
 
   //Initialize modules
-  laptop.init();
-  radio.init();
   xl.init();
+  delay(10);
+  laptop.init();
+  delay(10);
+  radio.init();
 
+  Serial.println("Enter Test number into puckmelt_terminal");
   laptop.println("Enter Test number into puckmelt_terminal");
-  Serial.end();
 
-
-
-  while (laptop.available() <= 0) {
-    delay(10);
-  }
-  int test_case = laptop.read().toInt();
+  // int test_case = laptop.read().toInt();
+  int test_case = 4;
+  Serial.println(test_case);
 
   switch (test_case) {
     case 1:
@@ -46,10 +47,10 @@ void setup() {
       xTaskCreatePinnedToCore(motor_loop,"Task", 10000, NULL, 1, &main_loop, 0);
       break;
     case 4:
-      xTaskCreatePinnedToCore(radio_loop,"Task", 10000, NULL, 1, &main_loop, 0);
+      xTaskCreatePinnedToCore(accel_loop,"Task", 10000, NULL, 1, &main_loop, 0);
       break;
     case 5:
-      xTaskCreatePinnedToCore(radio_loop,"Task", 10000, NULL, 1, &main_loop, 0);
+      xTaskCreatePinnedToCore(rotation_loop,"Task", 10000, NULL, 1, &main_loop, 0);
       break;
   }
 }
@@ -60,8 +61,9 @@ void wireless_loop(void* pvParameters) {
   for (;;) {
     laptop.handle();
     handle_terminal();
-
+    Serial.println(String(millis()) +",4.5,3");
     laptop.println(String(millis()) +",4.5,3");
+    delay(100);
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
@@ -73,9 +75,8 @@ void radio_loop(void* pvParameters) {
     handle_terminal();
 
     radio.batt_telemetry(1,2,3,4);
-    String data = String(radio.fb_axis) + "," + String(radio.lr_axis) + "," + String(radio.angle) + "," + String(radio.throttle);
-    //send forward joystick, sideways joystick, angle offset, throttle
-    laptop.println(data);
+    send_data(radio.fb_axis, radio.lr_axis, radio.angle, radio.throttle, random(-1,1),0,2,debug);
+    delay(10);
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
@@ -105,8 +106,14 @@ void accel_loop(void* pvParameters) {
     laptop.handle();
     radio.handle();
     handle_terminal();
+    xl.update();
 
+    //MOTOR STUFF HERE
 
+    radio.batt_telemetry(3000,2,3,4);
+    Serial.println("Quality: " + String(radio.quality) + "\nLast Receive Time: " + String(radio.last_receive_time) + "\nWatchdog status: " + String(radio.watchdog_enable));
+    send_data(radio.fb_axis, radio.lr_axis, radio.angle, radio.throttle, xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS),debug);
+    delay(10);
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
@@ -127,18 +134,13 @@ void handle_terminal() {
 
   WiFiClient* out = &laptop.client;
   String buffer;
-  bool execute = false;
-  int end = buffer.length() - 1;
-
-  if (out->available() > 0) { //read into the buffer
-    buffer += out->readString();
+  while (out->peek() != -1) {
+    buffer += char(out->read());
   }
-
-
+  int end = buffer.length() - 1;
   //EXECUTE LOGIC
   if (buffer.charAt(end) == '\n' || buffer.charAt(end) == '\r') { //don't execute until user presses enter
     buffer.trim();
-
     if (buffer.compareTo("kill") == 0) { // "kill"
       radio.watchdog_enable = true;//just set everything to 0
       radio.throttle = 0;
@@ -147,8 +149,9 @@ void handle_terminal() {
       controller.throttle = 0;
       controller.x_input = 0;
       controller.y_input = 0;
-
+      debug = "Program killed";
     } else if (buffer.compareTo("restart") == 0) { // "restart"
+      debug = "restarting...";
       ESP.restart();//restart the entire program, only way to un-kill
 
     } else if (buffer.startsWith("configure ")) {
@@ -163,6 +166,7 @@ void handle_terminal() {
         uint8_t new_value = buffer.substring(10).substring(9).toInt();
         SETTINGS_ACCESS::flip_sens(new_value);
       }
+      debug = "configured";
     } else if (buffer.startsWith("accel ")) { // accel scale x 2.4
       if (buffer.substring(6).startsWith("scale ")) {
         AXIS trgt_axs = X_AXIS;
@@ -200,6 +204,14 @@ void handle_terminal() {
         float new_value = buffer.substring(15).toFloat();
         xl.setOffset(trgt_axs,new_value);
       }
+      debug = "accelerometer configured";
+    } else if (buffer.startsWith("echo ")) {
+      debug = buffer.substring(5);
     }
   }
+
+}
+
+void send_data(uint16_t fb, uint16_t lr, uint16_t an, uint16_t th, float ct, float tn, float z, String py_log) {
+  laptop.println(String(fb) + ", " + String(lr) + ", "  + String(an) + ", " + String(th) + ", " + String(ct) + ", " + String(tn) + ", " + String(z) + ", " + py_log);
 }

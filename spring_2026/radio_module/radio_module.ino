@@ -14,4 +14,5 @@ void setup() {
 void loop() {
   laptop.handle();
   rc.handle();
+  Serial.println(String(rc.fb_axis));
 }
