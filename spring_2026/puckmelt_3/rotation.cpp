@@ -26,17 +26,6 @@ void physicState::set(PHYS_VAL index, float value) {
     }
 }
 
-/*Calculate the linear x acceleration (bot east)*/
-float physicState::x_xl() {
-    return (p(NRM_XL) + pow(p(ANG_V),2) * XL_RADIUS) * cos(p(ANGL)) + p(TAN_XL) * sin(p(ANGL)) * 9.81;
-            // accelerometer reading + the calculated centripetal acceleration (because it is inward therefore negative) cosine + the sin of the tangent accelerometer reading   then convert to m/s^2 because accel readings come in g's
-}
-
-/*Calculate the linear y acceleration (bot north)*/
-float physicState::y_xl() {
-    return (p(NRM_XL) + pow(p(ANG_V),2) * WHEEL_RADIUS) * sin(p(ANGL)) + p(TAN_XL) * sin(p(ANGL)) * 9.81;
-}
-
 /*Update state values based on sensor readings. Uses wheel velocity to keep track of angle*/
 void physicState::update(float nrm_xl, float tan_xl, float z_xl, float rpm) {
     physicState::set(NRM_XL,nrm_xl); //set accelerometer readings
@@ -70,19 +59,25 @@ void physicState::update(float nrm_xl, float tan_xl, float z_xl) {
         flip_factor = max(p(Z_XL)*1.1,-1.00); //cap the flip factors at -1 and 1
     }
 }
-
-float physicState::motor_throttle(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset) {
+//return tangent wheel velocity
+float physicState::motor_velocity(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset) {
     float weapon_v = weapon_rpm * 2 * PI / 60 * WHEEL_DIST; //wheel tangent velocity to rotate bot at weapon rpm
     float trans_v = v_trans * cos(p(ANGL) - angl_offset);
-    return controlHandler::v_to_rpm( flip_factor  *  (weapon_v + side * trans_v) )/ MAX_RPM_MTR;
+    return flip_factor * (weapon_v + side * trans_v) );
 }
+
+float physicState::velocity_to_throttle(float v) {
+    return -1 * (-136 + sqrt(-0.3636 * controlHandler::v_to_rpm(v) + 18517.37968) ) / 0.1818 //we plotted motor rpm vs throttle, and put a polynomial best fit line on it. This is the inverse of that best fit line.
+    //Essentially, this converts a target velocity into an actual throttle value based off of real tests we conducted
+}
+
 /*----------------------------------------------------------------------------------------------*/
 
 /*controlHandler----------------------------------------------------------------------------------------------*/
 //updates the controller state
-void controlHandler::in(int8_t x_v, int8_t y_v, int8_t th, int8_t of){
-    y_input = y_v;
-    x_input = x_v;
+void controlHandler::in(int8_t x_in, int8_t y_in, int8_t th, int8_t of){
+    y_input = y_in;
+    x_input = x_in;
     throttle = th;
     offset = of;
 }
@@ -91,12 +86,6 @@ float controlHandler::get_magnitude(int8_t x_in, int8_t y_in){
     float x_max = min(float(100),abs(100/tan(get_angle(x_in,y_in))));
     float y_max = min(float(100),abs(100*tan(get_angle(x_in,y_in))));
     return pow(x_in * x_in + y_in * y_in, 0.5) / pow(x_max * x_max + y_max * y_max, 0.5);
-}
-//Gets angle of input ccw from +x axis
-float controlHandler::get_angle(int8_t x_in, int8_t y_in){
-    // float adjustment1 = (x_in < 0) ? PI : 0;
-    // float adjustment2 = (atan2f(y_in,x_in) + adjustment1 < 0) ? 2*PI : 0;
-    return atan2f(y_in,x_in);// + adjustment1 + adjustment2;
 }
 
 //Converts wheeel rpm to wheel velocity

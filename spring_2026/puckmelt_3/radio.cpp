@@ -27,7 +27,7 @@ void Receiver::onReceive(serialReceiverLayer::rcChannels_t *rcChannels) {
     fb_axis = crsf->rcToUs(crsf->getChannel(FORWARD_BACKWARD_CHANNEL));
     lr_axis = crsf->rcToUs(crsf->getChannel(LEFT_RIGHT_CHANNEL));
     angle = map(angle,1500,2012,0,2*PI);
-    throttle = map(throttle,988,2012,0,100);
+    throttle = map(throttle,988,2012,-100,100);
     fb_axis = map(fb_axis,988,2012,-100,100);
     lr_axis = map(lr_axis,988,2012,-100,100);
   } else {

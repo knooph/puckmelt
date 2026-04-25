@@ -11,7 +11,7 @@ class Wireless{
     Wireless();
     void init();
     void connect();
-    int available();
+    bool available();
     String read();
     void handle();
 

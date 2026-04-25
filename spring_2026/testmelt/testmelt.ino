@@ -10,8 +10,8 @@ controlHandler controller; //Converts driver input into useful information for t
 physicState puckmath; //does the real-time rotational kinematics using information from the controller. Read target motor throttle off of this object
 Accelerometer xl = Accelerometer();
 
-puckMotor rmotor = puckMotor(10);
-puckMotor lmotor = puckMotor(11);
+puckMotor rmotor = puckMotor(RIGHT_MOTOR_PIN);
+puckMotor lmotor = puckMotor(LEFT_MOTOR_PIN);
 
 String debug = "";
 
@@ -29,11 +29,18 @@ void setup() {
   delay(10);
   radio.init();
 
+  rmotor.init();
+  lmotor.init();
+
   Serial.println("Enter Test number into puckmelt_terminal");
   laptop.println("Enter Test number into puckmelt_terminal");
 
-  // int test_case = laptop.read().toInt();
-  int test_case = 2;
+  while (!laptop.available()) {
+      laptop.handle();
+      delay(10);
+    }
+  int test_case = laptop.read().toInt();
+  debug = String(test_case);
   Serial.println(test_case);
 
   switch (test_case) {
@@ -61,8 +68,9 @@ void wireless_loop(void* pvParameters) {
   for (;;) {
     laptop.handle();
     handle_terminal();
-    Serial.println(String(millis()) +",4.5,3");
-    laptop.println(String(millis()) +",4.5,3");
+
+    send_data(100, 100, PI, 50, random(-1,1),0,2,debug);
+    
     delay(100);
   }
   vTaskDelete(NULL); //if the task ends delete it
@@ -88,14 +96,44 @@ void motor_loop(void* pvParameters) {
     handle_terminal();
     int r = 0;
     int l = 0;
-    if (millis() < 35000) {
+    unsigned long time = millis();
+    if (time < 10000) {
       r = 10;
       l = 10;
+    } else if (time < 20000) {
+      r = 20;
+      l = 20;
+    } else if (time < 30000) {
+      r = 30;
+      l = 30;
+    } else if (time < 40000) {
+      r = 40;
+      l = 40;
+    } else if (time < 50000) {
+      r = 50;
+      l = 50;
+    } else if (time < 60000) {
+      r = 60;
+      l = 60;
+    } else if (time < 70000) {
+      r = 70;
+      l = 70;
+    } else if (time < 80000) {
+      r = 80;
+      l = 80;
+    } else if (millis() < 90000) {
+      r = 90;
+      l = 90;
+    } else if (millis() < 100000) {
+      r = 100;
+      l = 100;
     }
     rmotor.throttle(r);
     lmotor.throttle(l);
     radio.batt_telemetry(1,2,3,4);
-    send_data()
+    // send_data(radio.fb_axis, radio.lr_axis, radio.angle, radio.throttle, xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS),debug);
+    send_data(1, 1, 1, 1, l,r,0,debug);
+    delay(10);
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
@@ -107,11 +145,21 @@ void accel_loop(void* pvParameters) {
     handle_terminal();
     xl.update();
 
-    //MOTOR STUFF HERE
+    int v = 0;
+    if (debug.toFloat() != 0) {
+      v = sqrt(debug.toFloat() * 9.8 / XL_RADIUS) * WHEEL_DIST; //convert specific centripetal acceleration into wheel velocity
+    } else if (debug.compareTo("sin")) {
+      v = 20 * sin(millis() * PI / 10); //sets wheel velocity to the sine wave of v = 20 sin(pi/20 t). This means our tangential acceleration should be pi * cos(pi/20 t);
+    }
 
-    radio.batt_telemetry(3000,2,3,4);
-    Serial.println("Quality: " + String(radio.quality) + "\nLast Receive Time: " + String(radio.last_receive_time) + "\nWatchdog status: " + String(radio.watchdog_enable));
-    send_data(radio.fb_axis, radio.lr_axis, radio.angle, radio.throttle, xl.adjustedAccel(Y_AXIS),xl.adjustedAccel(X_AXIS),xl.adjustedAccel(Z_AXIS),debug);
+    rmotor.throttle(puckmath.velocity_to_throttle(v));
+    lmotor.throttle(puckmath.velocity_to_throttle(v));
+
+    float data_1 = (debug.toFloat() != 0) ? xl.adjustedAccel(Y_AXIS) : PI * cos(millis() * PI / 10); //if we're in const accel mode show centripetal accel, otherwise the target tangential accel
+    float data_2 = (debug.toFloat() != 0) ? debug.toFloat() : xl.adjustedAccel(X_AXIS); //if we're in const accel mode show target accel, otherwise show tangential accel
+
+    radio.batt_telemetry(1,2,3,4);
+    send_data(radio.fb_axis, radio.lr_axis, radio.angle, radio.throttle, data_1, data_2, xl.adjustedAccel(Z_AXIS),debug);
     delay(10);
   }
   vTaskDelete(NULL); //if the task ends delete it
@@ -122,11 +170,6 @@ void rotation_loop(void* pvParameters) {
     laptop.handle();
     radio.handle();
     handle_terminal();
-    xl.handle();
-    puckmath.update()
-    controller.in(int8_t x_v, int8_t y_v, int8_t th, int8_t of)
-
-    
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
@@ -205,7 +248,7 @@ void handle_terminal() {
         float new_value = buffer.substring(15).toFloat();
         xl.setOffset(trgt_axs,new_value);
       }
-      debug = "accelerometer configured";
+      //debug = "accelerometer configured";
     } else if (buffer.startsWith("echo ")) {
       debug = buffer.substring(5);
     }

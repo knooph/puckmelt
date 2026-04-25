@@ -42,9 +42,9 @@ void Wireless::connect() {
 }
 
 /*if stuff in the client serial buffer*/
-int Wireless::available() {
-  if (!WiFiEnabled) { return 0; } //if wifi never initialized don't do anything
-  return client.available();
+bool Wireless::available() {
+  if (!WiFiEnabled) { return false; } //if wifi never initialized don't do anything
+  return (client.peek() != -1);
 }
 
 /*read the stuff in client serial buffer*/

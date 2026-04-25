@@ -10,8 +10,10 @@ puckMotor::puckMotor(const int GPIO_Pin)
   
   throttlePercent = 0; //Ensures throttle is zero on startup
   motorPin= (gpio_num_t)GPIO_Pin;
-  
-  //Initializing motor
+}
+
+//Initializing motor
+void puckMotor::init(){
   motor.begin();
   motor.setMotorSpinDirection(false); //Ensures motor rotates in default direction on startup
   motor.sendThrottlePercent(0); //Ensures no rotation on startup

@@ -12,8 +12,6 @@ enum PHYS_VAL {
   Z_XL,
   ANGL,
   ANG_V,
-  X_V,
-  Y_V
 };
 
 enum MOTOR_SIDE {
@@ -24,15 +22,14 @@ enum MOTOR_SIDE {
 class physicState {
   public:
   static float get(PHYS_VAL index);
-  static float x_xl();
-  static float y_xl();
   static void update(float nrm_xl, float tan_xl, float z_xl, float rpm);
   static void update(float nrm_xl, float tan_xl, float z_xl); //if there's no dshot telemetry
-  static float motor_throttle(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset);
+  static float motor_velocity(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset);
+  static float velocity_to_throttle(float v);
 
   private:
   static inline int8_t flip_factor;
-  static inline int16_t state[7];
+  static inline int16_t state[4];
   static void set(PHYS_VAL index, float value);
 
   //allows terminal access to private members

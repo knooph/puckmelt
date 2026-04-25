@@ -1,12 +1,11 @@
 #include "motor.h"
 
-
+puckMotor motor = puckMotor(6);
 void setup() {
-  // put your setup code here, to run once:
+  motor.init();
+
 
 }
-
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  motor.throttle(10);
 }

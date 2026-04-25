@@ -18,6 +18,8 @@ class puckMotor{
         //Constructor
         puckMotor(const int GPIO_Pin); //Note: GPIO_Pin is an integer, not a gpio_num_t. Gets converted to that inside constructor
 
+        void init(); //Initializes & begins the motor
+
         //Setters
         void throttle(float newThrottle);
 

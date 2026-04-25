@@ -24,16 +24,16 @@ enum MOTOR_SIDE {
 class physicState {
   public:
   static float get(PHYS_VAL index);
-  static float x_xl();
-  static float y_xl();
   static void update(float nrm_xl, float tan_xl, float z_xl, float rpm);
   static void update(float nrm_xl, float tan_xl, float z_xl); //if there's no dshot telemetry
-  static float motor_throttle(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset);
+  static float motor_velocity(MOTOR_SIDE side, float v_trans, float weapon_rpm, float angl_offset);
 
   private:
   static inline int8_t flip_factor;
   static inline int16_t state[7];
   static void set(PHYS_VAL index, float value);
+
+  static float velocity_to_throttle(float v);
 
   //allows terminal access to private members
   friend void handle_terminal();
@@ -46,7 +46,6 @@ class controlHandler {
   static inline int8_t y_input;
   static inline int8_t throttle;
   static float get_magnitude(int8_t x_in, int8_t y_in);
-  static float get_angle(int8_t x_in, int8_t y_in);
 
   public:
   static void in(int8_t x_v, int8_t y_v, int8_t th, int8_t of);
