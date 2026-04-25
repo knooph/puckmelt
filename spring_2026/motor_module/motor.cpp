@@ -10,6 +10,7 @@ puckMotor::puckMotor(const int GPIO_Pin)
   
   throttlePercent = 0; //Ensures throttle is zero on startup
   motorPin= (gpio_num_t)GPIO_Pin;
+  reversed = false;
 }
 
 //Initializing motor
@@ -25,34 +26,37 @@ void puckMotor::init(){
 //Destructor
 puckMotor::~puckMotor(){}
 
+//Default motor direction (forwards)
+void puckMotor::defaultRotation(){ 
+  
+  motor.setMotorSpinDirection(false);
+  reversed = false;
+}
+
+//Reverse motor direction (backwards)
+void puckMotor::reverseRotation(){ 
+  
+  motor.setMotorSpinDirection(true);
+  reversed = true;
+}
+
 //Throttle Setter (this takes throttlePercent values)
 void puckMotor::throttle(float newThrottle){
 
   throttlePercent= newThrottle;
-  motor.sendThrottlePercent(throttlePercent);
+
+  //Negative throttle values mean motor rotates backwards
+  if (throttlePercent<0){
+    reverseRotation();
+    motor.sendThrottlePercent(-throttlePercent); //Sends the absolute value instead
+
+  } 
+  else{
+    defaultRotation();
+    motor.sendThrottlePercent(throttlePercent);
+  }
   
-  Serial.print(motorPin);
-  Serial.print(" throttle: ");
-  Serial.print(throttlePercent);
-  Serial.println("%");
-}
-
-//Default motor direction
-void puckMotor::defaultRotation(){ 
-  
-  motor.setMotorSpinDirection(false);
-
-  Serial.print(motorPin);
-  Serial.println(" rotation direction: DEFAULT");
-}
-
-//Reverse motor direction
-void puckMotor::reverseRotation(){ 
-  
-  motor.setMotorSpinDirection(true);
-
-  Serial.print(motorPin);
-  Serial.println(" rotation direction: REVERSED");
+  Serial.println(String(motorPin) + " throttle: " + String(throttlePercent) + "% " + String(reversed));
 }
 
 //Emergency shutdown, terminates all rotation

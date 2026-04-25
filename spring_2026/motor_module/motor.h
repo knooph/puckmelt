@@ -12,6 +12,8 @@ class puckMotor{
         DShotRMT motor;
         float throttlePercent; //Throttle percent
         gpio_num_t motorPin;
+
+        bool reversed;
     
     public:
 
