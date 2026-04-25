@@ -4,6 +4,8 @@
 #include <WiFi.h>
 #include <ArduinoOTA.h> //Library for doing Over The Air stuff
 #include <CRSFforArduino.hpp>
+#include <SPI.h>
+// #include <DShotRMT.h>
 
 //Wireless module settings (edit in .cpp file)
 extern const char* WiFi_SSID; //define in network_id.cpp
@@ -23,10 +25,9 @@ extern uint8_t FLIP_SENSITIVITY; //percent of a 1G to idle in
 
 //pre-processor Receiver module settings
 #define LEFT_RIGHT_CHANNEL 1
-#define FORWARD_BACKWRAD_CHANNEL 2
+#define FORWARD_BACKWARD_CHANNEL 2
 #define THROTTLE_CHANNEL 4
 #define ANGLE_OFFSET_CHANNEL 3
-
 
 //terminal access functions
 class SETTINGS_ACCESS {

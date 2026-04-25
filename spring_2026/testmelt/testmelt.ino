@@ -33,7 +33,7 @@ void setup() {
   laptop.println("Enter Test number into puckmelt_terminal");
 
   // int test_case = laptop.read().toInt();
-  int test_case = 4;
+  int test_case = 2;
   Serial.println(test_case);
 
   switch (test_case) {
@@ -94,9 +94,8 @@ void motor_loop(void* pvParameters) {
     }
     rmotor.throttle(r);
     lmotor.throttle(l);
-    String data = String(l) + "," + String(r);
     radio.batt_telemetry(1,2,3,4);
-    laptop.println(data);
+    send_data()
   }
   vTaskDelete(NULL); //if the task ends delete it
 }
@@ -123,7 +122,9 @@ void rotation_loop(void* pvParameters) {
     laptop.handle();
     radio.handle();
     handle_terminal();
-
+    xl.handle();
+    puckmath.update()
+    controller.in(int8_t x_v, int8_t y_v, int8_t th, int8_t of)
 
     
   }
