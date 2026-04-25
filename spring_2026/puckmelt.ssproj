@@ -25,8 +25,8 @@
                     "units": "",
                     "value": "--.--",
                     "widget": "gauge",
-                    "widgetMax": 100,
-                    "widgetMin": -100,
+                    "widgetMax": 2012,
+                    "widgetMin": 988,
                     "xAxis": -1
                 },
                 {
@@ -50,8 +50,8 @@
                     "units": "",
                     "value": "--.--",
                     "widget": "gauge",
-                    "widgetMax": 100,
-                    "widgetMin": -100,
+                    "widgetMax": 2012,
+                    "widgetMin": 988,
                     "xAxis": -1
                 },
                 {
@@ -75,8 +75,8 @@
                     "units": "",
                     "value": "--.--",
                     "widget": "gauge",
-                    "widgetMax": 100,
-                    "widgetMin": -100,
+                    "widgetMax": 2012,
+                    "widgetMin": 1500,
                     "xAxis": -1
                 },
                 {
@@ -100,8 +100,8 @@
                     "units": "",
                     "value": "--.--",
                     "widget": "gauge",
-                    "widgetMax": 100,
-                    "widgetMin": 0,
+                    "widgetMax": 2012,
+                    "widgetMin": 988,
                     "xAxis": -1
                 }
             ],
@@ -198,7 +198,7 @@
             "checksum": "",
             "checksumAlgorithm": "",
             "connection": {
-                "address": "192.168.137.218",
+                "address": "192.168.137.160",
                 "socketTypeIndex": 0,
                 "tcpPort": 32
             },

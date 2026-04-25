@@ -3,20 +3,25 @@
 
 void Accelerometer::init(){
   x1 = LIS331();
-  pinMode(10, INPUT); // interrupt
-  pinMode(7, OUTPUT); // cs 
-  digitalWrite(7, HIGH); // set cs high
-  pinMode(6, OUTPUT); // mosi 
-  pinMode(5, INPUT); // miso 
-  pinMode(4, OUTPUT); // sclk 
-  SPI.begin();
-  x1.setSPICSPin(7);
+  pinMode(INT1_PIN, INPUT); // interrupt
+  pinMode(SS_PIN, OUTPUT); // ss 
+  digitalWrite(SS_PIN, HIGH); // set ss high
+  pinMode(MOSI_PIN, OUTPUT); // mosi 
+  pinMode(MISO_PIN, INPUT); // miso 
+  pinMode(SCK_PIN, OUTPUT); // sck 
+  SPI.begin(SCK_PIN,MISO_PIN,MOSI_PIN,SS_PIN);
+  x1.setSPICSPin(SS_PIN);
   x1.begin(LIS331::USE_SPI);
   x1.setFullScale(LIS331::HIGH_RANGE);
-  x1.setHighPassCoeff(LIS331::HPC_16);
-  x1.enableHPF(true);
-  scale1000[0],scale1000[1],scale1000[2] = 1000,1000,1000;
-  offset1000[0],offset1000[1],offset1000[2] = 0,0,0;
+  // x1.setHighPassCoeff(LIS331::HPC_16);
+  // x1.enableHPF(true);
+  scale1000[0] = 1000;
+  scale1000[1] = 1000;
+  scale1000[2] = 1000;
+  offset1000[0] = 0;
+  offset1000[1] = 0;
+  offset1000[2] = 0;
+  delay(100);
   Serial.println("Accelerometer ready!");
 }
 
@@ -33,8 +38,7 @@ float Accelerometer::adjustedAccel(AXIS axis){
 }
 
 float Accelerometer::rawAccel(AXIS axis){
-  float result;
-  return x1.convertToG(LIS331::HIGH_RANGE,sensor[axis]);
+  return sensor[axis];
 }
 
 void Accelerometer::setScale(AXIS axis, float scale) {
@@ -42,5 +46,5 @@ void Accelerometer::setScale(AXIS axis, float scale) {
 }
 
 void Accelerometer::setOffset(AXIS axis, float offset) {
-  scale1000[axis] = offset * 1000;
+  offset1000[axis] = offset * 1000;
 }

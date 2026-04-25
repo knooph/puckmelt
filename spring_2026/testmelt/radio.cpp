@@ -3,7 +3,7 @@
 //initialize module
 void Receiver::init() {
   
-  crsf = new CRSFforArduino(&Serial0,RX,TX);
+  crsf = new CRSFforArduino(&Serial1,RX,TX);
   // crsf = new CRSFforArduino(&Serial1, 0, 1);
   while(true) { //hold program hostage if crsf fails
     if(crsf->begin()){
@@ -26,12 +26,15 @@ void Receiver::onReceive(serialReceiverLayer::rcChannels_t *rcChannels) {
     throttle = crsf->rcToUs(crsf->getChannel(THROTTLE_CHANNEL));
     fb_axis = crsf->rcToUs(crsf->getChannel(FORWARD_BACKWARD_CHANNEL));
     lr_axis = crsf->rcToUs(crsf->getChannel(LEFT_RIGHT_CHANNEL));
+    angle = map(angle,1500,2012,0,2*PI);
+    throttle = map(throttle,988,2012,-100,100);
+    fb_axis = map(fb_axis,988,2012,-100,100);
+    lr_axis = map(lr_axis,988,2012,-100,100);
   } else {
     fb_axis = 0;
     lr_axis = 0;
     throttle = 0;
   }
-  Serial.println("YIPEEEE!");
 }
 
 void Receiver::onLinkStatisticsUpdate(serialReceiverLayer::link_statistics_t linkStatistics) {
